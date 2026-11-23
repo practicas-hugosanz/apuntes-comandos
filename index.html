@@ -122,17 +122,23 @@ dl.gloss dd{margin:0}
 @media (max-width:560px){ .row{grid-template-columns:1fr} .row .a,.row .n,.row .mine{grid-column:1} dl.gloss{grid-template-columns:1fr} }
 @media print{ header.top{position:static} nav.chips,.search,.theme,.filters{display:none} .cmd,.row{break-inside:avoid;box-shadow:none} body{background:#fff} }
 </style>
+<link rel="stylesheet" href="css/estilo.css">
+<link rel="stylesheet" href="css/simulador.css">
 </head>
 <body>
 <header class="top">
   <div class="bar">
-    <h1>Apuntes de comandos</h1>
+    <a class="brand" href="#top" aria-label="Apuntes de comandos">
+      <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7l5 5-5 5"/><path d="M12 18h8"/></svg></span>
+      <span class="brand-t"><b>Apuntes de comandos</b><small>Linux · PowerShell · Simulador</small></span>
+    </a>
     <div class="tabs" role="tablist">
       <button class="tab" role="tab" id="tab-linux" data-pane="linux" aria-selected="true">Linux</button>
       <button class="tab" role="tab" id="tab-ps" data-pane="ps" aria-selected="false">PowerShell</button>
+      <button class="tab sim" role="tab" id="tab-sim" data-pane="sim" aria-selected="false">Simulador<span class="new">nuevo</span></button>
     </div>
-    <div class="search"><input id="q" type="search" placeholder="Buscar… (ej: ordenar, chmod, borrar)" aria-label="Buscar"></div>
-    <button class="theme" id="theme" aria-label="Cambiar tema">Tema</button>
+    <div class="search"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="q" type="search" placeholder="Buscar… (ej: ordenar, chmod, borrar)" aria-label="Buscar"></div>
+    <button class="theme" id="theme" aria-label="Cambiar tema" title="Cambiar tema"><svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg></button>
   </div>
   <nav class="chips off" id="nav-ps" aria-label="Secciones de PowerShell">
     <a href="#ps-empieza">Empieza aquí</a>
@@ -158,10 +164,15 @@ dl.gloss dd{margin:0}
     <a href="#extras">Extras</a>
     <a href="#banco">Banco de ejercicios</a>
   </nav>
+  <nav class="chips off" id="nav-sim" aria-label="Simulador"></nav>
 </header>
 
 <main id="top">
 <div class="pane" id="pane-linux">
+<aside class="cta" data-goto-sim="linux">
+  <div><b>¿Listo para practicar?</b><span>Prueba los ejercicios de Linux en el simulador de terminal.</span></div>
+  <button type="button" class="primary" data-goto-sim="linux">Abrir simulador</button>
+</aside>
 
 <!-- ================= EMPIEZA AQUÍ ================= -->
 <section id="empieza" data-section>
@@ -1025,6 +1036,10 @@ apt show htop           <span class="q"># 4.127</span></code>
 </div><!-- /pane-linux -->
 
 <div class="pane off" id="pane-ps">
+<aside class="cta" data-goto-sim="ps">
+  <div><b>¿Listo para practicar?</b><span>Prueba los ejercicios de PowerShell en el simulador de terminal.</span></div>
+  <button type="button" class="primary" data-goto-sim="ps">Abrir simulador</button>
+</aside>
 <!-- ================= POWERSHELL: EMPIEZA ================= -->
 <section id="ps-empieza" data-section>
   <h2>PowerShell · Empieza aquí</h2>
@@ -1521,228 +1536,21 @@ Get-WmiObject -Class Win32_LogicalDisk          <span class="q"># discos lógico
 
 </div><!-- /pane-ps -->
 
+<div class="pane off" id="pane-sim">
+<section id="sim" data-section>
+  <div id="sim-root" aria-live="polite"></div>
+</section>
+</div><!-- /pane-sim -->
+
 </main>
 
+<script src="datos.js"></script>
+<script src="js/vfs.js"></script>
+<script src="js/linux.js"></script>
+<script src="js/pwsh.js"></script>
+<script src="js/ejercicios.js"></script>
+<script src="js/terminal.js"></script>
 <script>
-const E = [
-["4.001","Directorio en el que estás","pwd",0],
-["4.002","Listar archivos en formato largo","ls -l",0],
-["4.003","Listar archivos de /tmp","ls /tmp",0],
-["4.004","Archivos de /dev que empiecen por t","ls /dev/t*",0],
-["4.005","/dev: empiezan por tty y 5 caracteres en total","ls /dev/tty??",0],
-["4.006","/dev: terminan en 0","ls /dev/*0",0],
-["4.007","/dev: empiezan por t, terminan en 0 y 6 caracteres","ls /dev/t????0",1,"ls /dev/t???0","Cuatro ? (t + 4 + 0 = 6)."],
-["4.008","/dev: empiezan por t y terminan en 6","ls /dev/t*6",0],
-["4.009","/dev: un carácter cualquiera, luego t y termina en 6","ls /dev/?t*6",0],
-["4.010","Crear directorio Ejercicios","mkdir Ejercicios",0],
-["4.011","Cambiarte al directorio Ejercicios","cd Ejercicios",1,"cd /home/lliurex/Ejercicios","Ruta relativa."],
-["4.012","listado.txt con el listado largo del directorio de trabajo (relativa)","ls -l .. > listado.txt",0],
-["4.013","Añadir la palabra CFGS a listado.txt","echo CFGS >> listado.txt",1,"echo \"CFGS\" >> listado.txt","Sin comillas."],
-["4.014","Crear cursos/sistemas/linux","mkdir -p cursos/sistemas/linux",0],
-["4.015","Crear cursos/sistemas/windows","mkdir -p cursos/sistemas/windows",0],
-["4.016","Crear cursos/sistemas/macos","mkdir -p cursos/sistemas/macos",0],
-["4.017","Crear cursos/componentes","mkdir -p cursos/componentes",0],
-["4.018","Crear cursos/lenguajes","mkdir -p cursos/lenguajes",0],
-["4.019","Ver la estructura desde cursos (hay que instalar el comando)","tree cursos",1,"sudo apt install tree && tree cursos","Solo tree cursos."],
-["4.020","Crear directorio CFGS","mkdir CFGS",0],
-["4.021","Mover cursos (con contenido) dentro de CFGS","mv cursos CFGS",1,"mv cursos CFGS/","Sin barra final."],
-["4.022","Copiar el directorio sistemas a componentes","cp -r CFGS/cursos/sistemas CFGS/cursos/componentes",0],
-["4.023","Renombrar lenguajes a dispositivos","mv CFGS/cursos/lenguajes CFGS/cursos/dispositivos",0],
-["4.024","Borrar todo lo visible de CFGS (no CFGS)","rm -r CFGS/*",1,"rm -rf CFGS/*","Sin la f."],
-["4.025","Fichero vacío CFGS/software.txt","touch CFGS/software.txt",0],
-["4.026","Cambiarte a CFGS","cd CFGS",0],
-["4.027","Crear archivo1.txt y archivo2.txt vacíos","touch archivo1.txt archivo2.txt",0],
-["4.028","Ir al directorio padre","cd ..",0],
-["4.029","Volver a CFGS","cd CFGS",0],
-["4.030","Subir 2 directorios","cd ../..",0],
-["4.030 (bis)","Desde /home/lliurex ir a Ejercicios/CFGS","cd Ejercicios/CFGS",0],
-["4.031","Mostrar «Hola, Mundo»","echo \"Hola, Mundo\"",0],
-["4.032","prueba.txt con «Linux es genial»","echo \"Linux es genial\" > prueba.txt",0],
-["4.033","Añadir «Aprendiendo comandos» a prueba.txt","echo \"Aprendiendo comandos\" >> prueba.txt",0],
-["4.034","Mostrar prueba.txt","cat prueba.txt",0],
-["4.035","Añadir fecha y hora a archivo1.txt","date >> archivo1.txt",0],
-["4.036","Añadir el calendario a archivo2.txt","cal >> archivo2.txt",0],
-["4.037","Unir archivo1 y archivo2 en combinado.txt","cat archivo1.txt archivo2.txt > combinado.txt",0],
-["4.038","Buscar «Linux» en prueba.txt","grep \"Linux\" prueba.txt",0],
-["4.039","Líneas de combinado.txt con el número 5","grep 5 combinado.txt",1,"grep \"5\" combinado.txt","Sin comillas."],
-["4.040","Líneas de combinado.txt SIN el 5","grep -v 5 combinado.txt",0],
-["4.041","Líneas con «Pablo» en notas.txt","grep \"Pablo\" notas.txt",0],
-["4.042","Mostrar notas.txt","cat notas.txt",0],
-["4.043","Mostrar notas.txt numerando todas las líneas","cat -n notas.txt",0],
-["4.044","Últimas 5 líneas de notas.txt","tail -n 5 notas.txt",0],
-["4.045","Primeras 3 líneas de notas.txt","head -n 3 notas.txt",0],
-["4.046","notas.txt ordenado por el nombre (campo 1)","sort -k 1 notas.txt",1,"sort notas.txt","Hay que indicar -k 1."],
-["4.047","notas.txt ordenado por el primer apellido (campo 2)","sort -k 2 -t : notas.txt",1,"sort -k 2,2 notas.txt","Falta -t : (separador)."],
-["4.048","notas.txt ordenado por el segundo apellido","sort -k 3 -t : notas.txt",1,"sort -k 3,3 notas.txt"],
-["4.049","Ordenado por primer apellido, orden inverso","sort -k2 -r -t \":\" notas.txt",1,"sort -k 2,2 -r notas.txt"],
-["4.050","Número de líneas (alumnos) de notas.txt","wc -l notas.txt",0],
-["4.051","Tamaño en bytes de prueba.txt","wc -c prueba.txt",0],
-["4.052","Líneas con Daniela, campos separados por espacio en vez de :","grep Daniela notas.txt |tr \":\" \" \"",1,"grep \"Daniela\" notas.txt | tr ':' ' '","Sin comillas en grep; comillas dobles en tr."],
-["4.053","Nombre y apellido (campos 1 y 2) de notas.txt","cut -d \":\" -f 1,2 notas.txt",1,"cut -d ':' -f 1,2 notas.txt","Comillas dobles."],
-["4.054","Nombre, apellido y primera nota","cut -d \":\" -f 1,2,4 notas.txt",1,"cut -d ':' -f 1,2,3 notas.txt","La 1.ª nota es el campo 4."],
-["4.055","Nombre y apellido separados por guion","cut -f 1,2 -d\":\" notas.txt | tr \":\" \"-\"",1,"cut -d ':' -f 1,2 notas.txt | tr ':' '-'"],
-["4.056","Lo anterior, solo los llamados Pablo","cut -f 1,2 -d\":\" notas.txt | tr \":\" \"-\" |grep Pablo",1,"cut -f1,2 -d\":\" notas.txt | tr \":\" \"-\" | grep \"Pablo\"","Escribe grep Pablo sin comillas y -f 1,2 con espacio."],
-["4.057","notas2.txt = notas.txt con tabuladores en lugar de :","cat notas.txt | tr \":\" \"\\t\" > notas2.txt",1,"cat notas.txt | tr ':' '\\t' > notas2.txt"],
-["4.058","Número de palabras de notas2.txt","wc -w notas2.txt",0],
-["4.059","Nombre, 2 apellidos y 3.ª nota, con tabulador, solo Pablo, ordenados por nota","cut -f1,2,3,6 -d\":\" notas.txt | tr \":\" \"\\t\" | grep Pablo | sort -k4",1,"grep \"Pablo\" notas.txt | cut -d ':' -f 1,2,3,6 | tr ':' '\\t' | sort -k 4,4","Orden: cut → tr → grep → sort."],
-["4.060","Primer y último campo de notas.txt","cut -f 1,6 -d ':' notas.txt",1,"cut -d':' -f1,4 notas.txt","El último campo es el 6."],
-["4.061","Primer y último campo de notas2.txt","cut -f 1,6 notas2.txt",1,"cut -d':' -f1,4 notas2.txt","Tabuladores: sin -d."],
-["4.062","Buscar Daniela en todos los .txt","grep Daniela *.txt",0],
-["4.063","Mostrar /etc/passwd","cat /etc/passwd",0],
-["4.064","Buscar lliurex en /etc/passwd","grep lliurex /etc/passwd",0],
-["4.065","Usuarios (campo 1) de /etc/passwd","cut -d \":\" -f1 /etc/passwd",1,"cut -d':' -f1 /etc/passwd","Espacio tras -d y comillas dobles."],
-["4.066","Comprimir notas.txt manteniendo el original","gzip -k notas.txt",0],
-["4.067","(Verificar y) borrar el original notas.txt","rm notas.txt",1,"ls -l notas.txt notas.txt.gz","La verificación no se pone: la respuesta es el rm."],
-["4.068","Descomprimir notas.txt.gz","gzip -d notas.txt.gz",0],
-["4.069","notas.txt ordenado por apellido 1","sort -t \":\" -k2 notas.txt",1,"sort -t':' -k2,2 notas.txt"],
-["4.070","6 alumnos con la nota1 más baja de notas2.txt, de menor a mayor","sort -k4 -n notas2.txt | head -n 6",1,"sort -t':' -k3,3n notas2.txt | head -n 6","notas2.txt va por tabuladores; nota1 = campo 4."],
-["4.071","3 alumnos con la nota2 más alta, de mayor a menor","sort -k5 -n -r notas2.txt | head -n 3",1,"sort -t':' -k4,4nr notas2.txt | head -n 3","nota2 = campo 5."],
-["4.072","4 primeros caracteres de cada línea de notas.txt","cut -c1-4 notas.txt",1,"cut -c 1-4 notas.txt","Sin espacio: -c1-4."],
-["4.073","notas2.txt sin la letra a","cat notas2.txt |tr -d \"a\"",1,"cat notas2.txt | tr -d 'a'"],
-["4.074","notas2.txt sin mayúsculas","cat notas2.txt |tr -d \"A-Z\"",1,"cat notas2.txt | tr -d 'a'","Rango A-Z."],
-["4.075","notas.txt cambiando : por #","cat notas.txt | tr -s \":\" \"#\"",1,"cat notas.txt | tr ':' '#'"],
-["4.076","Nombre y 2 apellidos separados por espacio","cut -f1,2,3 -d\":\" notas.txt | tr \":\" \" \"",1,"cut -d':' -f1-3 notas.txt | tr ':' ' '"],
-["4.077","Número de inodo de notas.txt","ls -i notas.txt",0],
-["4.078","¿Cuántos enlaces tiene notas.txt?","1",1,"ls -l notas.txt","Responde el número."],
-["4.079","Enlace duro enlace_duro.txt","ln notas.txt enlace_duro.txt",0],
-["4.080","Inodos de notas.txt y enlace_duro.txt","iguales",1,"ls -i notas.txt enlace_duro.txt"],
-["4.081","¿Enlaces de notas.txt ahora?","2",1,"ls -l notas.txt"],
-["4.082","Borrar notas.txt","rm notas.txt",0],
-["4.083","ls -li: ¿enlaces de enlace_duro.txt?","1",0],
-["4.084","Contenido del enlace duro","cat enlace_duro.txt",0],
-["4.085","Recuperar notas.txt como enlace duro de enlace_duro.txt","ln enlace_duro.txt notas.txt",0],
-["4.086","Enlace simbólico simbolico.txt a notas.txt","ln -s notas.txt simbolico.txt",0],
-["4.087","ls -li: ¿enlaces de simbolico.txt?","1",0],
-["4.088","Inodos de notas.txt y simbolico.txt","Distintos",1,"ls -i notas.txt simbolico.txt"],
-["4.089","Contenido de notas.txt y simbolico.txt","iguales",1,"cat notas.txt simbolico.txt"],
-["4.090","Carácter que indica enlace simbólico en ls -l","l",0],
-["4.091","Borras notas.txt y visualizas simbolico.txt","error",1,"rm notas.txt"],
-["4.092","Recrear notas.txt como enlace duro","ln enlace_duro.txt notas.txt",0],
-["4.093","Directorio CFGS en formato largo","ls -l",1,"ls -li"],
-["4.094","Permisos actuales de notas.txt","-rw-rw-r--",1,"-rw-r--r--","Cópialo de tu ls -l."],
-["4.095","Simbólico: todos los permisos","chmod a+rwx notas.txt",1,"chmod a=rwx notas.txt"],
-["4.096","Simbólico: quitar escritura a todos","chmod a-w notas.txt",0],
-["4.097","Octal: todos los permisos","chmod 777 notas.txt",0],
-["4.098","Octal: ningún permiso","chmod 000 notas.txt",0],
-["4.099","Simbólico: todos los permisos (forma larga)","chmod u+r+w+x, g+r+w+x, o+r+w+x notas.txt",1,"chmod a=rwx notas.txt"],
-["4.100","Simbólico: quitar escritura","chmod a-w notas.txt",0],
-["4.101","Octal: quitar escritura, dejar lectura y ejecución","chmod 555 notas.txt",0],
-["4.102","Octal: lectura y escritura solo para el dueño","chmod 600 notas.txt",0],
-["4.103","Simbólico: lectura y escritura solo para el dueño","chmod u+r+w-x, g-r-w-x, o-r-w-x",1,"chmod u=rw,g=,o= notas.txt"],
-["4.104","Octal: lectura para todos, rw solo el dueño","chmod 644 notas.txt",0],
-["4.105","Simbólico: lectura para todos, rw solo el dueño","chmod u+r+w-x, g+r-w-x, o+r-w-x notas.txt",1,"chmod u=rw,go=r notas.txt"],
-["4.106","Simbólico: quitar r/w a grupo y otros, x para todos","chmod go-rw,a+x notas.txt",0],
-["4.107","Información detallada del kernel y SO","uname -a",1,"uname -a","Faltaba «$ » delante."],
-["4.108","Características de la CPU","lscpu",1,"lscpu","Faltaba «$ »."],
-["4.109","RAM y swap legible","free -h",1,"free -h","Faltaba «$ »."],
-["4.110","Uso de disco legible","df -h",1,"df -h","Faltaba «$ »."],
-["4.111","Dispositivos de bloques (discos y particiones)","lsblk",1,"lsblk","Faltaba «$ »."],
-["4.112","Dispositivos PCI","lspci",1,"lspci","Faltaba «$ »."],
-["4.113","Dispositivos USB","lsusb",1,"lsusb","Faltaba «$ »."],
-["4.114","Tiempo encendido y carga media","uptime",1,"uptime","Faltaba «$ »."],
-["4.115","Usuarios conectados","who",1,"who","Faltaba «$ »."],
-["4.116","5 primeros mensajes del kernel, legibles","dmesg -H | head -n 5",1,"dmesg -H | head -n 5","Faltaba «$ » (la solución del examen trae un typo: head-n5)."],
-["4.117","Listado largo de /usr","ls -l /usr",1,"ls -l /usr","Faltaba «$ »."],
-["4.118","Fecha y hora con formato 2025-01-08 14:35:45","date",1,"date +\"%Y-%m-%d %H:%M:%S\"","La solución guardada es solo «date»; el formato real es date +\"%Y-%m-%d %H:%M:%S\"."],
-["4.119","Calendario del mes","cal",0],
-["4.120","Calendario de 2025","cal 2025",0],
-["4.121","5 primeras líneas del log del kernel","dmesg | head -n 5",0],
-["4.122","Terminar un proceso por PID (1234)","kill 1234",0],
-["4.123","Monitor interactivo de recursos","htop",1,"htop","Faltaba «$ »."],
-["4.124","Uso de disco de los sistemas montados","df -h",0],
-["4.125","Uso de disco de /home (resumen, legible)","du -sh /home",0],
-["4.126","Uso de disco de /home para todos los ficheros","du -ah /home",0],
-["4.127","Detalles del paquete htop","apt show htop",1,"apt show htop","Faltaba «$ »."],
-["4.128","Procesos ordenados por CPU","ps aux --sort -%cpu",1,"ps aux --sort=-%cpu","Espacio, no «=»."],
-["4.129","Procesos ordenados por memoria","ps aux --sort -%mem",1,"ps aux --sort=-%mem","Espacio, no «=»."],
-["4.130","Finalizar todos los procesos «chrome»","kill chrome",1,"pkill chrome","La solución guardada es kill chrome (en la práctica: pkill chrome)."],
-["4.131","Procesos relacionados con ssh","ps aux | grep ssh",0],
-["4.132","Procesos con «mysql» en el nombre","ps aux | grep mysql",1,"$ ps aux | grep mysql","Única solución SIN «$ »."],
-["4.133","Espacio disponible en /var","df -h /var",0]
-];
-const P = [
-["ps1","Estando en C:\\ crea el directorio PS (New-Item -ItemType Directory -Name)","New-Item -ItemType Directory -Name PS",0],
-["ps2","Entra en el directorio PS (set-location -Path)","set-location -Path PS",0],
-["ps3","En C:\\PS crea la carpeta cursos con New-Item y ruta relativa","New-Item -ItemType Directory -Name cursos",0,"","Tu variante -Path .\\cursos también se dio por buena."],
-["ps4","Entra en cursos con el alias cd","cd cursos",0],
-["ps5","En C:\\PS\\cursos crea la carpeta componentes (New-Item, relativa)","New-Item -ItemType Directory -Name componentes",0,"","Tu variante -Path .\\componentes también valió."],
-["ps6","Crea la carpeta dispositivos (New-Item, relativa)","New-Item -ItemType Directory -Name dispositivos",0,"","Tu variante -Path .\\dispositivos también valió."],
-["ps7","Crea la carpeta sistemas (New-Item, relativa)","New-Item -ItemType Directory -Name sistemas",0,"","Tu variante -Path .\\sistemas también valió."],
-["ps8","Entra en sistemas con el alias cd","cd sistemas",1,"cd sistemas","Tu respuesta era idéntica a la solución y salió fallada: probable fallo de la plataforma (o un carácter invisible al pegar)."],
-["ps9","Crea las carpetas linux, macos y windows con el alias mkdir","mkdir linux, macos, windows",0],
-["ps10","Visualiza la estructura con tree desde 2 directorios atrás (relativa)","tree ..\\..",0],
-["ps21","Estando en C:\\PS crea 2 archivos vacíos aviso1.txt y aviso2.txt (New-Item)","New-Item -ItemType File -Path aviso1.txt, aviso2.txt",2,"","Con -Name y dos nombres da error; con -Path funciona. También valdría repetir el comando: New-Item -ItemType File -Name aviso1.txt ; New-Item -ItemType File -Name aviso2.txt"],
-["ps22","Lista solo los archivos dentro del directorio actual","Get-ChildItem -File",2],
-["ps23","Crea 2 archivos vacíos registro1.log y registro2.log","New-Item -ItemType File -Path registro1.log, registro2.log",2],
-["ps24","Estando en C:\\PS copia todos los archivos .log al directorio windows (ruta relativa)","Copy-Item -Path *.log -Destination cursos\\sistemas\\windows",2,"","«windows» está en C:\\PS\\cursos\\sistemas\\windows, así que desde C:\\PS la ruta relativa es cursos\\sistemas\\windows (con .\\ delante también vale)."],
-["ps25","Elimina todos los archivos .log del directorio actual","Remove-Item -Path *.log",2],
-["ps26","Crea tres directorios: Dir1, Dir2, Dir3","mkdir Dir1, Dir2, Dir3",2,"","Como en ps9. Alternativa: New-Item -ItemType Directory -Path Dir1, Dir2, Dir3"],
-["ps27","Cambia al directorio cursos (ruta absoluta)","Set-Location -Path C:\\PS\\cursos",2,"","Con el alias: cd C:\\PS\\cursos"],
-["ps28","Crea un archivo vacío datos.csv","New-Item -ItemType File -Name datos.csv",2],
-["ps29","Lista los elementos del directorio windows (ruta relativa)","Get-ChildItem -Path sistemas\\windows",2,"","Pensado desde C:\\PS\\cursos (donde estás tras ps27). Si estuvieras en C:\\PS sería cursos\\sistemas\\windows."],
-["ps30","Elimina el archivo datos.csv","Remove-Item datos.csv",2],
-["ps31","Muestra «¡Hola, mundo!» en la consola","Write-Output \"¡Hola, mundo!\"",1,"Write-Host \"¡Hola, mundo!\"","Para mostrar texto el profe quiere Write-Output."],
-["ps32","Guarda en sintaxis.txt la ayuda de tree (tree /?)","tree /? | Out-File sintaxis.txt",0,"","Tu variante tree /? > sintaxis.txt también valió (> es Out-File)."],
-["ps33","Muestra el contenido de sintaxis.txt","Get-Content sintaxis.txt",0,"","La solución guardada decía datos.txt (errata)."],
-["ps34","Busca «carpeta» en sintaxis.txt (Select-String)","Select-String -Path sintaxis.txt -Pattern carpeta",0,"","Tu orden -Pattern … -Path … también valió."],
-["ps35","Crea prueba.txt con «Primera línea»","Write-Output \"Primera línea\" | Out-File prueba.txt",0,"","La solución guardada tenía un > de más. Tu Set-Content también valió."],
-["ps36 (agregar)","Agrega «Segunda línea» a prueba.txt","Write-Output \"Segunda línea\" | Out-File prueba.txt -Append",0,"","La solución guardada tenía una errata (-File Path). Tu Add-Content también valió."],
-["ps36 (tail)","Últimas 3 líneas de sintaxis.txt","Get-Content sintaxis.txt -Tail 3",0],
-["ps37","Primeras 5 líneas de sintaxis.txt","Get-Content sintaxis.txt -TotalCount 5",0,"","Tu -Head 5 también valió (es otro nombre del mismo parámetro)."],
-["ps38","Ordena alfabéticamente sintaxis.txt","Get-Content sintaxis.txt | Sort-Object",0],
-["ps39","Solo los nombres de archivos y directorios del directorio actual","Get-ChildItem -Name",0],
-["ps40","Muestra sintaxis.txt y después «COMANDO COMPLETADO» (con ;)","Get-Content sintaxis.txt ; Write-Output \"COMANDO COMPLETADO\"",0,"","Tu Write-Host valió aquí, pero en ps31 no: usa Write-Output."],
-["ps41","lista.txt con solo los nombres del directorio actual","Get-ChildItem -Name > lista.txt",0],
-["ps42","Redirige «Proceso completado» a output.log","Write-Output \"Proceso completado\" | Out-File -Append output.log",0,"","La solución guardada tenía erratas («proceo»). Tu variante con > valió."],
-["ps43","Vacía output.log (sin borrarlo)","Clear-Content -Path output.log",0,"","Tu Clear-Content output.log valió."],
-["ps44","Cuenta las líneas de notas.txt con .Count","(Get-Content notas.txt).Count",0],
-["ps45","Cuenta las líneas con Measure-Object","Get-Content notas.txt | Measure-Object -Line",0],
-["ps46","Ordena los archivos por tamaño","Get-ChildItem -File | Sort-Object -Property Length",0],
-["ps47","Filtra los archivos .txt (-Filter)","Get-ChildItem -File -Filter *.txt",0,"","La solución guardada escribía -Filter .txt, sin el *."],
-["ps48","Líneas con Pablo en notas.txt","Select-String -Path notas.txt -Pattern \"Pablo\"",0],
-["ps49","Guarda las 10 primeras líneas de notas.txt en notas_10.txt","Get-Content notas.txt -TotalCount 10 | Out-File notas_10.txt",0,"","Tu variante con > valió."],
-["ps50","Muestra notas.txt y notas_10.txt (separados por línea en blanco, con ;)","Get-Content notas.txt; Get-Content notas_10.txt",0,"","La solución guardada no lleva la línea en blanco; tu Write-Host \"\" también valió."],
-["ps51","Combina notas.txt y notas_10.txt en notas_combinado.txt","Get-Content notas.txt, notas_10.txt | Out-File notas_combinado.txt",0,"","Tu variante con > valió."],
-["ps52","Ordena alfabéticamente notas.txt","Get-Content notas.txt | Sort-Object",0],
-["ps53","Archivos del directorio por tamaño","Get-ChildItem | Sort-Object -Property Length",0,"","Tu -File extra valió."],
-["ps54","Archivos por tamaño, de mayor a menor","Get-ChildItem | Sort-Object -Property Length -Descending",0],
-["ps55","Los 3 archivos más grandes","Get-ChildItem | Sort-Object -Property Length -Descending | Select-Object -First 3",0],
-["ps56","Solo las carpetas del directorio actual","Get-ChildItem -Directory",0],
-["ps57","Solo los nombres de los archivos que empiecen por «notas»","Get-ChildItem -Name -Filter notas*",0,"","La solución guardada (-filter Notas) no lleva *. Tu -File -Filter \"notas*\" -Name valió."],
-["ps58","Líneas con un 10 en notas.txt","Select-String -Path notas.txt -Pattern \"10\"",0],
-["ps59","Últimas 5 líneas de notas.txt en notas_5.txt","Get-Content -Path notas.txt -Tail 5 | Out-File notas_5.txt",0,"","Tu variante con > valió."],
-["ps60","notas.txt ordenado alfabéticamente al revés","Get-Content notas.txt | Sort-Object -Descending",0],
-["ps61","Información básica del sistema","Get-ComputerInfo",0],
-["ps62","Solo el nombre del equipo","Get-ComputerInfo -Property csname",0,"","Tu Select-Object CsName valió."],
-["ps63","Nombre del producto del sistema operativo","Get-ComputerInfo -Property WindowsProductName",0,"","Tu Select-Object valió."],
-["ps64","Procesador y versión de Windows (CsProcessors, WindowsVersion)","Get-ComputerInfo -Property CsProcessors, windowsVersion",0,"","Tu Select-Object valió."],
-["ps65","Arquitectura y distribución del teclado","Get-ComputerInfo -Property OsArchitecture,KeyboardLayout",0,"","Tu Select-Object valió."],
-["ps66","Última vez que se encendió el sistema","Get-ComputerInfo -Property OsLastBootUpTime",0,"","La solución guardada decía LastBootUpTime; el nombre real de la propiedad es OsLastBootUpTime."],
-["ps67","Memoria instalada (osTotalVisibleMemorySize)","Get-ComputerInfo -Property osTotalVisibleMemorySize",1,"Get-ComputerInfo | Select-Object OsTotalVisibleMemorySize","Aquí no se aceptó el Select-Object: usa -Property."],
-["ps68","Muestra todos los servicios en ejecución","Get-Service",1,"Get-Service | Where-Object {$_.Status -eq \"Running\"}","La solución guardada es solo Get-Service. El filtro Running es la ps69."],
-["ps69","Solo los servicios en estado Running","Get-Service | Where-Object Status -eq \"Running\"",0],
-["ps70","Servicios que contienen «Network»","Get-Service | Where-Object Name -like \"*Network*\"",0,"","La solución guardada traía espacios en vez de *."],
-["ps71","Ordena los servicios por su nombre","Get-Service | Sort-Object Name",1,"Get-Service | Sort-Object Name","La solución guardada (Get-Process -Name \"notepad\") parece de otra pregunta: tu respuesta es la lógica. Si vuelve a salir, es fallo de la plataforma."],
-["ps72","Solo el servicio «Windows Update»","Get-Service -Name \"wuauserv\"",0,"","wuauserv = nombre interno de Windows Update. Tu DisplayName valió."],
-["ps73","Nombre y estado de todos los servicios","Get-Service | Select-Object Name, Status",0],
-["ps74","Detén el servicio Cola de impresión (Spooler)","Stop-Service -Name \"Spooler\"",1,"Get-Service | Where-Object Name -eq \"Spooler\" | Stop-Service","Directo: Stop-Service -Name."],
-["ps75","Muestra solo el servicio Spooler","Get-Service -Name \"Spooler\"",0,"","Tu Where-Object valió."],
-["ps76","Inicia el servicio Spooler","Start-Service -Name \"Spooler\"",1,"Get-Service | Where-Object Name -eq \"Spooler\" | Start-Service","Directo: Start-Service -Name."],
-["ps77","Todos los procesos en ejecución","Get-Process",0],
-["ps78","Procesos con «Microsoft» en el nombre","Get-Process | Where-Object Name -like \"*Microsoft*\"",0],
-["ps79","Procesos por uso de CPU, de más a menos","Get-Process | Sort-Object CPU -Descending",0],
-["ps80","Los 5 procesos que más CPU usan","Get-Process | Sort-Object CPU -Descending | Select-Object -First 5",0],
-["ps81","Abre notepad","start notepad",0],
-["ps82","Verifica que existe un proceso «notepad»","Get-Process -Name \"notepad\"",0],
-["ps83","Para el proceso notepad","Stop-Process -Name \"notepad\"",1],
-["ps84","Información detallada del sistema","systeminfo",0],
-["ps85","Solo el nombre del sistema operativo (de systeminfo)","systeminfo | Select-String \"Nombre del sistema operativo\"",0],
-["ps86","Solo el tiempo de arranque del sistema","systeminfo | Select-String \"Tiempo de arranque del sistema\"",0],
-["ps87","Discos montados en el sistema","Get-PSDrive",0],
-["ps88","Actualizaciones instaladas","Get-HotFix",0],
-["ps89","Información del sistema operativo con Get-WmiObject","Get-WmiObject -Class Win32_OperatingSystem",0],
-["ps90","Detalles de la CPU con Get-WmiObject","Get-WmiObject Win32_Processor",0]
-];
 
 // ---------- bancos de ejercicios (Linux y PowerShell) ----------
 function setupBank(key, data, sigil, isCmd, noDollar){
@@ -1813,21 +1621,42 @@ document.querySelectorAll('input[id^="only-"]').forEach(function(x){ x.addEventL
 
 // ---------- pestañas Linux / PowerShell ----------
 function showPane(name){
-  ["linux","ps"].forEach(function(k){
+  ["linux","ps","sim"].forEach(function(k){
     document.getElementById("pane-"+k).classList.toggle("off", k!==name);
     document.getElementById("nav-"+k).classList.toggle("off", k!==name);
     document.getElementById("tab-"+k).setAttribute("aria-selected", k===name ? "true" : "false");
   });
+  document.body.dataset.pane = name;
   try{ localStorage.setItem("pane", name); }catch(e){}
 }
 document.querySelectorAll(".tab").forEach(function(b){
   b.addEventListener("click", function(){ showPane(b.dataset.pane); window.scrollTo(0,0); });
 });
+document.querySelectorAll("[data-goto-sim]").forEach(function(b){
+  b.addEventListener("click", function(){
+    const os = b.dataset.gotoSim;
+    try{ localStorage.setItem("sim-os", os); }catch(e){}
+    showPane("sim"); window.scrollTo(0,0);
+    if(window.Sim && Sim.app && Sim.app.setOs) Sim.app.setOs(os);
+  });
+});
 (function(){
   let p = null;
   try{ p = localStorage.getItem("pane"); }catch(e){}
   if(/^#(ps-|p-)/.test(location.hash)) p = "ps";
-  if(p === "ps" || p === "linux") showPane(p);
+  if(location.hash === "#simulador") p = "sim";
+  if(p === "ps" || p === "linux" || p === "sim") showPane(p); else showPane("linux");
+})();
+
+// boton volver arriba
+(function(){
+  const b = document.createElement("button");
+  b.className = "totop"; b.type = "button"; b.setAttribute("aria-label","Volver arriba");
+  b.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>';
+  b.addEventListener("click", function(){ window.scrollTo({top:0,behavior:"smooth"}); });
+  document.body.appendChild(b);
+  const upd = function(){ b.classList.toggle("show", window.scrollY > 600 && document.body.dataset.pane !== "sim"); };
+  window.addEventListener("scroll", upd, {passive:true}); upd();
 })();
 
 // calculadora de permisos
