@@ -1,0 +1,1871 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apuntes de comandos</title>
+<style>
+:root{
+  --bg:#f6f7f9; --surface:#ffffff; --surface2:#eef1f5; --text:#1b2330; --muted:#566175;
+  --border:#d9dee7; --accent:#1f6feb; --accent-soft:#e3eeff; --code-bg:#0f1722; --code-text:#e6edf6; --code-muted:#8ba3c7;
+  --ok:#1a7f4b; --ok-soft:#e1f5ea; --bad:#c62828; --bad-soft:#fde8e8; --warn:#9a6700; --warn-soft:#fff4d6;
+  --plain:#eaf4ff; --plain-b:#1f6feb;
+  --shadow:0 1px 2px rgba(15,23,34,.06),0 4px 14px rgba(15,23,34,.05);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e131b; --surface:#161d29; --surface2:#1e2736; --text:#e6ebf3; --muted:#9aa6ba;
+    --border:#2a3548; --accent:#6aa5ff; --accent-soft:#1b2a45; --code-bg:#090d14; --code-text:#e6edf6;
+    --ok:#52d08a; --ok-soft:#14301f; --bad:#ff7b7b; --bad-soft:#3a1c1c; --warn:#f0c04d; --warn-soft:#3a2f12;
+    --plain:#17253b; --plain-b:#6aa5ff; --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e131b; --surface:#161d29; --surface2:#1e2736; --text:#e6ebf3; --muted:#9aa6ba;
+  --border:#2a3548; --accent:#6aa5ff; --accent-soft:#1b2a45; --code-bg:#090d14; --code-text:#e6edf6;
+  --ok:#52d08a; --ok-soft:#14301f; --bad:#ff7b7b; --bad-soft:#3a1c1c; --warn:#f0c04d; --warn-soft:#3a2f12;
+  --plain:#17253b; --plain-b:#6aa5ff; --shadow:none;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:130px}
+body{margin:0;background:var(--bg);color:var(--text);font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+code,pre,kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+kbd{background:var(--surface2);border:1px solid var(--border);border-bottom-width:2px;border-radius:5px;padding:0 6px;font-size:.85em}
+header.top{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--border)}
+.bar{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.bar h1{font-size:18px;margin:0;font-weight:700}
+.tabs{display:flex;gap:6px}
+.tab{border:1px solid var(--border);background:var(--surface2);color:var(--text);padding:5px 12px;border-radius:999px;font-size:14px}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.tab[disabled]{opacity:.55;cursor:not-allowed}
+.search{flex:1;min-width:180px}
+.search input{width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:15px}
+.theme{border:1px solid var(--border);background:var(--surface2);color:var(--text);border-radius:10px;padding:6px 10px;cursor:pointer}
+nav.chips{max-width:1080px;margin:0 auto;padding:0 16px 10px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+nav.chips a{white-space:nowrap;text-decoration:none;color:var(--muted);font-size:13px;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:var(--bg)}
+nav.chips a:hover{color:var(--accent);border-color:var(--accent)}
+main{max-width:1080px;margin:0 auto;padding:20px 16px 90px}
+section{margin:0 0 44px}
+section>h2{font-size:24px;margin:0 0 4px;letter-spacing:-.01em}
+section>p.lead{margin:0 0 16px;color:var(--muted)}
+h3.group{font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:22px 0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,470px),1fr));gap:14px}
+.cmd{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);min-width:0}
+.cmd.wide{grid-column:1/-1}
+.cmd h3{margin:0 0 4px;font-size:19px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cmd h3 code{background:var(--accent-soft);color:var(--accent);padding:1px 8px;border-radius:7px;font-size:18px}
+.badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--ok-soft);color:var(--ok)}
+.badge.extra{background:var(--surface2);color:var(--muted)}
+.cmd p{margin:6px 0}
+.plain{background:var(--plain);border-left:4px solid var(--plain-b);border-radius:0 10px 10px 0;padding:8px 12px;margin:8px 0}
+.plain b.t{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--plain-b);margin-bottom:2px}
+.syntax,.ex,.out{display:block;background:var(--code-bg);color:var(--code-text);padding:8px 12px;border-radius:9px;font-size:14px;margin:6px 0;overflow-x:auto;white-space:pre;position:relative}
+.syntax,.ex{cursor:copy}
+.syntax{border-left:3px solid var(--accent)}
+.out{border-left:3px solid #4a5a73;color:#c9d4e4}
+.ex .q,.out .q{color:var(--code-muted)}
+.label{font-size:12px;color:var(--muted);margin:8px 0 0;text-transform:uppercase;letter-spacing:.05em}
+.ex.copied::after,.syntax.copied::after{content:"copiado";position:absolute;right:8px;top:6px;font-size:11px;color:#7ee2a8}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0}
+th,td{border-bottom:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+td code,li code,p code,dd code{background:var(--surface2);padding:1px 6px;border-radius:6px;font-size:.88em}
+.tablewrap{overflow-x:auto}
+.note{border-radius:10px;padding:8px 12px;margin:8px 0;font-size:15px;background:var(--warn-soft);border-left:4px solid var(--warn)}
+.note.bad{background:var(--bad-soft);border-left-color:var(--bad)}
+.note.ok{background:var(--ok-soft);border-left-color:var(--ok)}
+.note.big{font-size:17px;padding:12px 16px}
+ul.tips,ol.steps{padding-left:22px;margin:6px 0}
+ul.tips li,ol.steps li{margin:5px 0}
+pre.tree{background:var(--code-bg);color:var(--code-text);padding:12px 14px;border-radius:10px;overflow-x:auto;font-size:14px;line-height:1.35;margin:6px 0}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.two figcaption{font-size:13px;color:var(--muted)}
+figure{margin:0}
+dl.gloss{margin:0;display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:6px 14px}
+dl.gloss dt{font-weight:700}
+dl.gloss dd{margin:0}
+.anat{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.anat div{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:8px 12px;min-width:120px}
+.anat div b{display:block;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:17px;color:var(--accent)}
+.anat div span{font-size:13px;color:var(--muted)}
+.map{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
+.map a{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;text-decoration:none;background:var(--accent-soft);color:var(--accent);padding:3px 10px;border-radius:8px;border:1px solid transparent}
+.map a:hover{border-color:var(--accent)}
+.prompt{background:var(--code-bg);color:var(--code-text);border-radius:10px;padding:12px 14px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;overflow-x:auto;white-space:pre}
+.prompt .u{color:#6fd38d}.prompt .p{color:#6aa5ff}.prompt .d{color:#f0c04d}
+/* calculadora */
+.calc{display:grid;grid-template-columns:auto repeat(3,64px);gap:6px 10px;align-items:center;margin:8px 0}
+.calc label{display:flex;gap:6px;align-items:center;cursor:pointer;font-family:ui-monospace,Menlo,Consolas,monospace}
+.calc .h{font-size:12px;color:var(--muted);text-transform:uppercase}
+.calc-out{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.calc-out code{font-size:18px;background:var(--code-bg);color:var(--code-text);padding:6px 12px;border-radius:8px}
+.calc input[type=text]{width:70px;padding:4px 8px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:ui-monospace,monospace;font-size:16px}
+/* bank */
+.filters{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:8px 0 12px;font-size:15px}
+.filters label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.stat{color:var(--muted)}
+.row{display:grid;grid-template-columns:62px 1fr;gap:4px 12px;padding:10px 12px;border:1px solid var(--border);border-left-width:4px;border-radius:10px;background:var(--surface);margin:6px 0}
+.row.ok{border-left-color:var(--ok)}
+.row.bad{border-left-color:var(--bad)}
+.row.pend{border-left-color:var(--accent)}
+.row .pendnote{grid-column:2;font-size:13px;color:var(--accent)}
+.row .id{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;color:var(--muted);padding-top:2px}
+.row .q{font-size:15px}
+.row .a{grid-column:2;display:block;background:var(--code-bg);color:var(--code-text);padding:6px 10px;border-radius:8px;font-size:14px;overflow-x:auto;white-space:pre;cursor:copy;position:relative}
+.row .a.copied::after{content:"copiado";position:absolute;right:8px;top:5px;font-size:11px;color:#7ee2a8}
+.pane.off,nav.chips.off{display:none}
+.tab{cursor:pointer}
+.bank.quiz .a:not(.show){color:transparent;text-shadow:0 0 9px #cfd8e6;cursor:pointer;user-select:none}
+.row .n{grid-column:2;font-size:14px;color:var(--warn)}
+.row .mine{grid-column:2;font-size:14px;color:var(--bad)}
+.hidden{display:none!important}
+@media (max-width:560px){ .row{grid-template-columns:1fr} .row .a,.row .n,.row .mine{grid-column:1} dl.gloss{grid-template-columns:1fr} }
+@media print{ header.top{position:static} nav.chips,.search,.theme,.filters{display:none} .cmd,.row{break-inside:avoid;box-shadow:none} body{background:#fff} }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="bar">
+    <h1>Apuntes de comandos</h1>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tab-linux" data-pane="linux" aria-selected="true">Linux</button>
+      <button class="tab" role="tab" id="tab-ps" data-pane="ps" aria-selected="false">PowerShell</button>
+    </div>
+    <div class="search"><input id="q" type="search" placeholder="Buscar… (ej: ordenar, chmod, borrar)" aria-label="Buscar"></div>
+    <button class="theme" id="theme" aria-label="Cambiar tema">Tema</button>
+  </div>
+  <nav class="chips off" id="nav-ps" aria-label="Secciones de PowerShell">
+    <a href="#ps-empieza">Empieza aquí</a>
+    <a href="#ps-reglas">Cómo responder</a>
+    <a href="#ps-mapa">Qué entra</a>
+    <a href="#ps-dirs">Carpetas y archivos</a>
+    <a href="#ps-contenido">Contenido</a>
+    <a href="#ps-sistema">Sistema, servicios y procesos</a>
+    <a href="#ps-banco">Banco de ejercicios</a>
+  </nav>
+  <nav class="chips" id="nav-linux" aria-label="Secciones de Linux">
+    <a href="#empieza">Empieza aquí</a>
+    <a href="#reglas">Cómo responder</a>
+    <a href="#mapa">Qué entra</a>
+    <a href="#dirs">Carpetas</a>
+    <a href="#ficheros">Ficheros</a>
+    <a href="#redir">Redirecciones</a>
+    <a href="#busqueda">Buscar y filtrar</a>
+    <a href="#enlaces">Enlaces</a>
+    <a href="#permisos">Permisos</a>
+    <a href="#sistema">Sistema</a>
+    <a href="#procesos">Procesos y paquetes</a>
+    <a href="#extras">Extras</a>
+    <a href="#banco">Banco de ejercicios</a>
+  </nav>
+</header>
+
+<main id="top">
+<div class="pane" id="pane-linux">
+
+<!-- ================= EMPIEZA AQUÍ ================= -->
+<section id="empieza" data-section>
+  <h2>Empieza aquí (si nunca has usado comandos)</h2>
+  <p class="lead">Cinco minutos de base y el resto de la página se entiende solo.</p>
+
+  <div class="grid">
+    <article class="cmd" data-search="terminal consola que es shell linux comandos">
+      <h3>1. ¿Qué es la terminal?</h3>
+      <p>Es una ventana donde, en vez de hacer clic, <b>escribes órdenes</b> y el ordenador responde con texto. Cada orden se llama <b>comando</b>. Escribes el comando, pulsas <kbd>Intro</kbd> y se ejecuta.</p>
+      <p>Linux es el sistema operativo (como Windows o macOS) y casi todo lo que haces con ratón se puede hacer con comandos.</p>
+    </article>
+
+    <article class="cmd" data-search="prompt dolar $ lliurex virtualbox usuario equipo carpeta">
+      <h3>2. El «prompt» y el símbolo <code>$</code></h3>
+      <p>Lo que ves antes de poder escribir se llama <b>prompt</b>:</p>
+<div class="prompt"><span class="u">lliurex@lliurex-VirtualBox</span>:<span class="p">~/Ejercicios</span><span class="d">$</span> ls -l</div>
+      <ul class="tips">
+        <li><b>lliurex</b> = tu usuario · <b>lliurex-VirtualBox</b> = el nombre del ordenador.</li>
+        <li><b>~/Ejercicios</b> = la carpeta en la que estás ahora (<code>~</code> es tu carpeta personal).</li>
+        <li><b>$</b> = «estoy listo, escribe». En una terminal real <b>no se escribe</b>: ya está puesto.</li>
+      </ul>
+      <div class="note"><b>Pero en el examen sí lo escribes</b>: el profe pide pegar la respuesta empezando en el <code>$</code>. Más abajo, en «Cómo responder».</div>
+    </article>
+
+    <article class="cmd wide" data-search="anatomia comando opcion argumento parametro sintaxis grep -v">
+      <h3>3. Cómo está hecho un comando</h3>
+      <p>Casi todos tienen tres partes separadas por <b>espacios</b>: <code>comando  -opciones  argumentos</code></p>
+      <div class="anat">
+        <div><b>grep</b><span>el comando: qué hacer<br>(grep = buscar texto)</span></div>
+        <div><b>-v</b><span>opción: cambia cómo lo hace<br>(-v = «al revés»)</span></div>
+        <div><b>5</b><span>argumento: con qué<br>(el texto a buscar)</span></div>
+        <div><b>combinado.txt</b><span>argumento: sobre qué<br>(el fichero)</span></div>
+      </div>
+      <ul class="tips">
+        <li>Las <b>opciones</b> llevan un guion delante (<code>-l</code>) y se pueden juntar: <code>ls -l -a</code> = <code>ls -la</code>. No se deja espacio entre el guion y la letra.</li>
+        <li>Los <b>espacios importan</b>: separan las partes. <code>cd Ejercicios</code> funciona, <code>cdEjercicios</code> no.</li>
+        <li>Las <b>mayúsculas importan</b>: <code>Notas.txt</code> y <code>notas.txt</code> son ficheros distintos.</li>
+        <li>Si un texto lleva espacios, se pone entre comillas: <code>echo "Hola, Mundo"</code>.</li>
+        <li>Si un comando funciona bien, normalmente <b>no dice nada</b>. Solo habla cuando hay algo que mostrar o un error.</li>
+      </ul>
+    </article>
+
+    <article class="cmd" data-search="ruta absoluta relativa . .. ~ / directorio carpeta raiz arbol">
+      <h3>4. Carpetas y rutas</h3>
+      <p>Linux llama <b>directorio</b> a las carpetas y <b>fichero</b> (o archivo) a los documentos. Todo cuelga de un único árbol que empieza en <code>/</code> (la «raíz»).</p>
+<pre class="tree">/                  ← raíz
+├── home
+│   └── lliurex        ← tu carpeta personal (~)
+│       └── Ejercicios
+│           └── CFGS
+├── tmp
+├── dev
+└── etc</pre>
+      <p>Una <b>ruta</b> es la dirección de algo en ese árbol:</p>
+      <ul class="tips">
+        <li><b>Absoluta</b>: empieza por <code>/</code> y vale desde cualquier sitio → <code>/home/lliurex/Ejercicios</code></li>
+        <li><b>Relativa</b>: parte de donde estás → <code>Ejercicios/CFGS</code></li>
+      </ul>
+      <table>
+        <tr><th>Atajo</th><th>Significa</th></tr>
+        <tr><td><code>.</code></td><td>la carpeta donde estás</td></tr>
+        <tr><td><code>..</code></td><td>la carpeta de arriba (la «padre»)</td></tr>
+        <tr><td><code>~</code></td><td>tu carpeta personal</td></tr>
+        <tr><td><code>/</code></td><td>la raíz de todo</td></tr>
+      </table>
+    </article>
+
+    <article class="cmd" data-search="trucos teclado tab flecha arriba ctrl c historial">
+      <h3>5. Cuatro trucos de teclado</h3>
+      <ul class="tips">
+        <li><kbd>Tab</kbd>: autocompleta nombres. Escribe <code>cd Ejer</code> + <kbd>Tab</kbd>.</li>
+        <li><kbd>↑</kbd>: recupera el comando anterior (así no lo reescribes).</li>
+        <li><kbd>Ctrl</kbd>+<kbd>C</kbd>: corta un comando que se ha quedado «colgado».</li>
+        <li><code>clear</code>: limpia la pantalla.</li>
+      </ul>
+      <div class="note ok"><b>Consejo para practicar:</b> abre una terminal (o una máquina virtual con Linux) y repite los ejemplos. Equivocarse con estos comandos es seguro mientras estés dentro de tu carpeta <code>Ejercicios</code>.</div>
+    </article>
+
+    <article class="cmd wide" data-search="glosario terminologia que significa inodo pid kernel paquete proceso">
+      <h3>Mini-glosario</h3>
+      <dl class="gloss">
+        <dt>Terminal / shell</dt><dd>La ventana de comandos / el programa que los interpreta.</dd>
+        <dt>Directorio</dt><dd>Una carpeta.</dd>
+        <dt>Fichero</dt><dd>Un archivo (un documento, un texto…).</dd>
+        <dt>Argumento</dt><dd>Lo que le das a un comando para que trabaje (un fichero, un texto, una carpeta).</dd>
+        <dt>Opción</dt><dd>Letra con guion (<code>-l</code>) que cambia el comportamiento del comando.</dd>
+        <dt>Salida</dt><dd>Lo que el comando escribe en pantalla al terminar.</dd>
+        <dt>Redirigir</dt><dd>Mandar esa salida a un fichero en vez de a la pantalla (<code>&gt;</code>).</dd>
+        <dt>Tubería (pipe)</dt><dd>El símbolo <code>|</code>: la salida de un comando pasa como entrada al siguiente, como una cadena de montaje.</dd>
+        <dt>Campo</dt><dd>Cada «columna» de una línea de texto, separada por un carácter (aquí, los dos puntos <code>:</code>).</dd>
+        <dt>Inodo</dt><dd>Número que identifica a un fichero dentro del disco (como su DNI interno).</dd>
+        <dt>Enlace</dt><dd>Un segundo nombre o acceso directo para un fichero.</dd>
+        <dt>Permiso</dt><dd>Quién puede leer, modificar o ejecutar un fichero.</dd>
+        <dt>Proceso / PID</dt><dd>Programa en marcha / el número que lo identifica.</dd>
+        <dt>Kernel</dt><dd>El núcleo de Linux, la parte que habla con el hardware.</dd>
+        <dt>Paquete</dt><dd>Un programa instalable (por ejemplo <code>tree</code> o <code>htop</code>).</dd>
+        <dt>sudo</dt><dd>«Hazlo como administrador». Se necesita para instalar programas.</dd>
+      </dl>
+    </article>
+  </div>
+</section>
+
+<!-- ================= REGLAS ================= -->
+<section id="reglas" data-section>
+  <h2>Cómo responder en el examen</h2>
+  <div class="cmd wide" data-search="profe importante pegar dolar $ espacios respuesta ejemplo ls -l">
+    <div class="note big bad"><b>MUY IMPORTANTE (palabras del profe):</b> se pega la respuesta <b>a partir del carácter <code>$</code>, incluido</b>. Ojo con los espacios en blanco.<br>
+    Si la respuesta es <code>ls -l</code>, se responde exactamente: <code>$ ls -l</code> (un espacio entre el <code>$</code> y el comando).</div>
+    <p>Esto explica muchos de tus fallos: las preguntas 4.107–4.116, 4.123 y 4.127 tenían el comando bien, pero sin <code>$ </code> delante.</p>
+    <div class="label">Además, viendo tus fallos (no lo ha dicho el profe, es lo que se deduce)</div>
+    <ul class="tips">
+      <li><b>Comillas dobles</b> <code>" "</code>, no simples: <code>cut -d ":" -f1</code>, no <code>cut -d ':' -f1</code>.</li>
+      <li><b>Sin comillas si no hacen falta</b>: <code>$ echo CFGS &gt;&gt; listado.txt</code>, <code>$ grep 5 combinado.txt</code>. Con espacios sí: <code>$ echo "Hola, Mundo"</code>.</li>
+      <li><b>Ruta relativa y sin barra final</b>: <code>$ cd Ejercicios</code> (no <code>/home/lliurex/Ejercicios</code>), <code>$ mv cursos CFGS</code> (no <code>CFGS/</code>).</li>
+      <li><b>Lo mínimo que pide el enunciado</b>: <code>$ rm -r CFGS/*</code> (sin la <code>f</code>), <code>$ tree cursos</code> (sin instalarlo en la misma línea).</li>
+      <li><b>Opciones tal cual</b>: <code>$ ps aux --sort -%cpu</code> (con espacio, sin <code>=</code>).</li>
+      <li>Si el enunciado dice «esto no lo pongas en la respuesta», la respuesta es el <b>siguiente</b> paso (4.067 → <code>$ rm notas.txt</code>).</li>
+      <li>Preguntas de concepto: solo la palabra o número (<code>1</code>, <code>2</code>, <code>iguales</code>, <code>Distintos</code>, <code>error</code>, <code>l</code>).</li>
+      <li>Única solución <b>sin</b> <code>$</code> que he visto: 4.132 (<code>ps aux | grep mysql</code>). Si dudas, sigue la regla del profe.</li>
+    </ul>
+  </div>
+  <div class="cmd wide" data-search="notas.txt formato alumnos campos nombre apellido nota evaluaciones">
+    <h3>El fichero <code>notas.txt</code></h3>
+    <p>Lista 20 alumnos con las notas de las 3 evaluaciones, un alumno por línea, con los campos separados por <code>:</code> (dos puntos):</p>
+    <code class="syntax">Nombre:Apellido1:Apellido2:Nota1:Nota2:Nota3</code>
+    <div class="tablewrap"><table>
+      <tr><th>Campo nº</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr>
+      <tr><th>Qué es</th><td>Nombre</td><td>Apellido 1</td><td>Apellido 2</td><td>Nota 1</td><td>Nota 2</td><td>Nota 3 (último)</td></tr>
+    </table></div>
+    <p><code>notas2.txt</code> es el mismo fichero pero con <b>tabuladores</b> (un hueco grande) en lugar de dos puntos (ejercicio 4.057).</p>
+    <div class="label">Ejemplo inventado, de solo 4 alumnos (el real tiene 20) — lo uso en las explicaciones</div>
+    <code class="out">Pablo:Garcia:Lopez:7:5:8
+Daniela:Martin:Ruiz:9:6:7
+Pablo:Sanz:Gil:4:8:6
+Lucia:Perez:Mora:10:9:9</code>
+  </div>
+</section>
+
+<!-- ================= MAPA ================= -->
+<section id="mapa" data-section>
+  <h2>Qué comandos entran (lista del profe)</h2>
+  <p class="lead">Pulsa en uno para ir a su explicación. Los comandos del profe están en azul; los marcados «ejercicios» han salido en tus prácticas aunque no estén en su lista.</p>
+  <div class="cmd wide" data-search="lista profe comandos entran examen indice">
+    <div class="label">1 · Carpetas y ficheros</div>
+    <div class="map"><a href="#c-pwd">pwd</a><a href="#c-mkdir">mkdir</a><a href="#c-cd">cd</a><a href="#c-touch">touch</a><a href="#c-ls">ls</a><a href="#c-cp">cp</a><a href="#c-mv">mv</a><a href="#c-rm">rm</a><a href="#c-rmdir">rmdir</a></div>
+    <div class="label">2 · Manipulación y búsqueda de contenido</div>
+    <div class="map"><a href="#c-echo">echo</a><a href="#c-cat">cat</a><a href="#c-grep">grep</a><a href="#c-find">find</a><a href="#redir">&gt;&gt;</a><a href="#redir">&gt;</a><a href="#c-tail">tail</a><a href="#c-head">head</a><a href="#c-sort">sort</a><a href="#c-wc">wc</a><a href="#c-gzip">gzip</a></div>
+    <div class="label">3 · Información del sistema <span style="text-transform:none">(el profe dice: descripciones en las págs. 14 y 15 de sus apuntes)</span></div>
+    <div class="map"><a href="#s-uname">uname</a><a href="#s-lscpu">lscpu</a><a href="#s-free">free</a><a href="#s-df">df</a><a href="#s-lsblk">lsblk</a><a href="#s-lspci">lspci</a><a href="#s-lsusb">lsusb</a><a href="#s-uptime">uptime</a><a href="#s-who">who</a><a href="#s-dmesg">dmesg</a><a href="#s-date">date</a><a href="#s-cal">cal</a><a href="#c-apt">apt-get</a><a href="#c-htop">htop</a><a href="#c-kill">kill</a><a href="#c-ps">ps</a><a href="#s-du">du</a><a href="#c-apt">apt-get update</a><a href="#c-apt">apt-get upgrade</a></div>
+    <div class="label">También en tus ejercicios</div>
+    <div class="map"><a href="#c-cut">cut</a><a href="#c-tr">tr</a><a href="#c-ln">ln</a><a href="#c-chmod">chmod</a><a href="#c-tree">tree</a></div>
+  </div>
+</section>
+
+<!-- ================= CARPETAS ================= -->
+<section id="dirs" data-section>
+  <h2>1 · Moverse y gestionar carpetas</h2>
+  <div class="grid">
+
+    <article class="cmd" id="c-pwd" data-search="pwd directorio actual donde estoy ruta">
+      <h3><code>pwd</code><span class="badge">4.001</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«¿Dónde estoy?». Te dice la carpeta en la que estás ahora mismo.</div>
+      <code class="syntax">pwd</code>
+      <div class="label">Verás algo así</div>
+      <code class="out">/home/lliurex/Ejercicios</code>
+      <p>Nombre: <i>print working directory</i> (mostrar directorio de trabajo).</p>
+    </article>
+
+    <article class="cmd" id="c-cd" data-search="cd cambiar directorio entrar salir padre .. ruta relativa absoluta">
+      <h3><code>cd</code><span class="badge">4.011, 4.026–4.030</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Entra en esta carpeta». Es como hacer doble clic en una carpeta, o ir «atrás».</div>
+      <code class="syntax">cd carpeta</code>
+      <code class="ex">cd Ejercicios          <span class="q"># entra en Ejercicios (que está dentro de donde estás)</span>
+cd CFGS                <span class="q"># entra en CFGS</span>
+cd ..                  <span class="q"># sube un nivel (a la carpeta padre)</span>
+cd ../..               <span class="q"># sube dos niveles</span>
+cd Ejercicios/CFGS     <span class="q"># baja dos niveles de golpe</span></code>
+      <div class="note bad"><b>Tu fallo (4.011):</b> escribiste <code>cd /home/lliurex/Ejercicios</code> (ruta absoluta). El examen quería la relativa: <code>$ cd Ejercicios</code>.</div>
+      <p>Sin nada detrás, <code>cd</code> te lleva a tu carpeta personal. Nota: <code>cd</code> no muestra nada si va bien.</p>
+    </article>
+
+    <article class="cmd" id="c-ls" data-search="ls listar contenido carpeta largo -l -a -i -R ocultos inodo">
+      <h3><code>ls</code><span class="badge">4.002–4.009, 4.012, 4.117</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Enséñame qué hay aquí». Lista los ficheros y carpetas de un sitio. (<i>list</i>)</div>
+      <code class="syntax">ls [-opciones] [carpeta o patrón]</code>
+      <table>
+        <tr><th>Opción</th><th>Qué cambia</th></tr>
+        <tr><td><code>-l</code></td><td><b>l</b>argo: una línea por fichero con permisos, dueño, tamaño y fecha</td></tr>
+        <tr><td><code>-a</code></td><td><b>a</b>ll: incluye los ficheros ocultos (empiezan por punto)</td></tr>
+        <tr><td><code>-i</code></td><td>muestra el número de <b>i</b>nodo de cada fichero</td></tr>
+        <tr><td><code>-R</code></td><td>recursivo: entra también en las subcarpetas</td></tr>
+      </table>
+      <code class="ex">ls                           <span class="q"># lista lo de la carpeta actual</span>
+ls -l                        <span class="q"># listado largo</span>
+ls /tmp                      <span class="q"># lista el contenido de /tmp</span>
+ls /dev/t*                   <span class="q"># solo los que empiezan por t (comodín *)</span>
+ls -l .. &gt; listado.txt       <span class="q"># el listado largo de la carpeta de arriba, guardado en un fichero</span>
+ls -l /usr
+ls -i notas.txt              <span class="q"># inodo de ese fichero</span></code>
+      <div class="label">Verás con <code>ls -l</code> (inventado)</div>
+      <code class="out">total 12
+-rw-rw-r-- 1 lliurex lliurex  120 nov 23 10:05 notas.txt
+drwxrwxr-x 2 lliurex lliurex 4096 nov 23 10:01 CFGS</code>
+      <p>De izquierda a derecha: permisos · nº de enlaces · dueño · grupo · tamaño en bytes · fecha · nombre. Los permisos se explican en la sección <a href="#permisos">Permisos</a>.</p>
+      <div class="label">Comodines: cuando no sabes el nombre entero</div>
+      <table>
+        <tr><th>Comodín</th><th>Sustituye a…</th><th>Ejemplo</th></tr>
+        <tr><td><code>*</code></td><td>cualquier cosa, de cualquier longitud</td><td><code>ls /dev/*0</code> → todo lo que acabe en 0</td></tr>
+        <tr><td><code>?</code></td><td>exactamente <b>una</b> letra</td><td><code>ls /dev/tty??</code> → «tty» + 2 letras</td></tr>
+      </table>
+      <div class="note bad"><b>Tu fallo (4.007):</b> «empieza por t, acaba en 0 y tiene 6 caracteres» = <code>t</code> + <b>4</b> interrogaciones + <code>0</code> → <code>$ ls /dev/t????0</code>. Tú pusiste 3. Truco: caracteres totales − 2 = nº de <code>?</code>.</div>
+      <div class="note"><b>4.093:</b> «formato largo» a secas es <code>$ ls -l</code> (tú añadiste la <code>i</code>).</div>
+    </article>
+
+    <article class="cmd" id="c-mkdir" data-search="mkdir crear directorio carpeta -p">
+      <h3><code>mkdir</code><span class="badge">4.010, 4.014–4.020</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Crea una carpeta». (<i>make directory</i>)</div>
+      <code class="syntax">mkdir [-p] nombre</code>
+      <p>Con <code>-p</code> crea también las carpetas intermedias que falten (de «path», ruta). Sin <code>-p</code>, si la carpeta padre no existe, da error.</p>
+      <code class="ex">mkdir Ejercicios                  <span class="q"># una carpeta</span>
+mkdir CFGS
+mkdir -p cursos/sistemas/linux    <span class="q"># crea cursos, luego sistemas dentro, luego linux</span>
+mkdir -p cursos/sistemas/windows
+mkdir -p cursos/sistemas/macos
+mkdir -p cursos/componentes
+mkdir -p cursos/lenguajes</code>
+    </article>
+
+    <article class="cmd" id="c-rmdir" data-search="rmdir borrar directorio vacio carpeta">
+      <h3><code>rmdir</code><span class="badge">lista del profe</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Borra esta carpeta, pero solo si está vacía». Es la versión «segura» de borrar carpetas. (<i>remove directory</i>)</div>
+      <code class="syntax">rmdir carpeta</code>
+      <code class="ex">rmdir pruebas              <span class="q"># borra "pruebas" si no contiene nada</span>
+rmdir -p a/b/c             <span class="q"># borra c, luego b, luego a (si quedan vacías)</span></code>
+      <p>Si la carpeta tiene contenido da error («Directory not empty»). Para borrar carpetas con contenido se usa <a href="#c-rm"><code>rm -r</code></a>.</p>
+      <div class="note">No ha salido en tus ejercicios, pero el profe lo lista. Pregunta tipo: «borra la carpeta vacía X» → <code>$ rmdir X</code>.</div>
+    </article>
+
+    <article class="cmd" id="c-tree" data-search="tree arbol estructura directorios instalar">
+      <h3><code>tree</code><span class="badge">4.019</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>Dibuja el «árbol» de carpetas y ficheros. Útil para ver la estructura de un vistazo. No viene instalado.</div>
+      <code class="syntax">tree [carpeta]</code>
+      <code class="ex">sudo apt install tree      <span class="q"># instalarlo (una sola vez)</span>
+tree cursos               <span class="q"># 4.019 → la respuesta del examen es solo esta línea</span></code>
+    </article>
+
+    <article class="cmd wide" id="c-estructura" data-search="estructura arbol final tree cfgs cursos componentes sistemas dispositivos que construyes">
+      <h3>La estructura que vas construyendo en los ejercicios</h3>
+      <div class="two">
+        <figure>
+<pre class="tree">.
+├── CFGS
+├── cursos
+│   ├── componentes
+│   ├── lenguajes
+│   └── sistemas
+│       ├── linux
+│       ├── macos
+│       └── windows
+└── listado.txt</pre>
+          <figcaption>Tras 4.020 (todo creado con <code>mkdir</code>).</figcaption>
+        </figure>
+        <figure>
+<pre class="tree">.
+├── CFGS
+│   └── cursos
+│       ├── componentes
+│       │   └── sistemas
+│       │       ├── linux
+│       │       ├── macos
+│       │       └── windows
+│       ├── lenguajes
+│       └── sistemas
+│           ├── linux
+│           ├── macos
+│           └── windows
+└── listado.txt</pre>
+          <figcaption>Tras 4.021 (<code>mv cursos CFGS</code>: «cursos» entra en CFGS) y 4.022 (<code>cp -r</code>: «sistemas» se copia dentro de «componentes»).</figcaption>
+        </figure>
+      </div>
+      <p>Después renombras <code>lenguajes</code> a <code>dispositivos</code> (4.023), vacías <code>CFGS</code> (4.024) y trabajas con ficheros de texto: <code>archivo1.txt</code>, <code>archivo2.txt</code>, <code>combinado.txt</code>, <code>prueba.txt</code>, <code>notas.txt</code>…</p>
+    </article>
+  </div>
+</section>
+
+<!-- ================= FICHEROS ================= -->
+<section id="ficheros" data-section>
+  <h2>2 · Crear, copiar, mover, borrar y leer ficheros</h2>
+  <div class="grid">
+
+    <article class="cmd" id="c-touch" data-search="touch crear fichero vacio archivo">
+      <h3><code>touch</code><span class="badge">4.025, 4.027</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Crea un fichero vacío». Si ya existe, solo le actualiza la fecha.</div>
+      <code class="syntax">touch fichero1 [fichero2 …]</code>
+      <code class="ex">touch CFGS/software.txt              <span class="q"># crea software.txt dentro de CFGS</span>
+touch archivo1.txt archivo2.txt      <span class="q"># crea dos ficheros a la vez</span></code>
+    </article>
+
+    <article class="cmd" id="c-cp" data-search="cp copiar fichero directorio -r recursivo">
+      <h3><code>cp</code><span class="badge">4.022</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Haz una copia». El original se queda donde está. (<i>copy</i>)</div>
+      <code class="syntax">cp [-r] origen destino</code>
+      <ul class="tips">
+        <li>Para copiar una <b>carpeta</b> con su contenido hay que añadir <code>-r</code> (recursivo = «y todo lo de dentro»).</li>
+        <li>Si el destino es una carpeta que existe, la copia va <i>dentro</i> de ella.</li>
+      </ul>
+      <code class="ex">cp -r CFGS/cursos/sistemas CFGS/cursos/componentes
+<span class="q"># = copia la carpeta "sistemas" dentro de "componentes"</span>
+cp notas.txt copia.txt      <span class="q"># copia un fichero con otro nombre</span></code>
+    </article>
+
+    <article class="cmd" id="c-mv" data-search="mv mover renombrar cambiar nombre">
+      <h3><code>mv</code><span class="badge">4.021, 4.023</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Cambia de sitio» <b>o</b> «cambia el nombre». Linux usa el mismo comando para las dos cosas. (<i>move</i>)</div>
+      <code class="syntax">mv origen destino</code>
+      <ul class="tips">
+        <li>Si el destino es una carpeta que existe → <b>mueve</b> dentro de ella.</li>
+        <li>Si el destino no existe → <b>renombra</b>.</li>
+      </ul>
+      <code class="ex">mv cursos CFGS                                       <span class="q"># mueve "cursos" dentro de "CFGS"</span>
+mv CFGS/cursos/lenguajes CFGS/cursos/dispositivos     <span class="q"># "lenguajes" pasa a llamarse "dispositivos"</span></code>
+      <div class="note bad"><b>Tu fallo (4.021):</b> <code>mv cursos CFGS/</code> con barra final. La solución es <code>$ mv cursos CFGS</code>.</div>
+    </article>
+
+    <article class="cmd" id="c-rm" data-search="rm borrar eliminar -r -f -i recursivo peligro">
+      <h3><code>rm</code><span class="badge">4.024, 4.067, 4.082</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Borra». <b>No hay papelera</b>: lo que se borra, se pierde. (<i>remove</i>)</div>
+      <code class="syntax">rm [-r] fichero…</code>
+      <table>
+        <tr><th>Opción</th><th>Qué hace</th></tr>
+        <tr><td><code>-r</code></td><td>permite borrar <b>carpetas</b> y todo lo que contienen</td></tr>
+        <tr><td><code>-f</code></td><td>«forzar»: no pregunta nada (peligroso)</td></tr>
+        <tr><td><code>-i</code></td><td>pregunta antes de borrar cada cosa</td></tr>
+      </table>
+      <code class="ex">rm notas.txt          <span class="q"># borra un fichero</span>
+rm -r CFGS/*         <span class="q"># borra TODO lo visible dentro de CFGS (pero no la carpeta CFGS)</span></code>
+      <p><code>CFGS/*</code> = «cualquier cosa dentro de CFGS». No incluye los ocultos.</p>
+      <div class="note bad"><b>Tu fallo (4.024):</b> usaste <code>rm -rf CFGS/*</code>. Pide solo <code>$ rm -r CFGS/*</code>.</div>
+      <div class="note">Tip del examen: <code>rm</code> = ficheros · <code>rm -r</code> = carpetas con contenido · <code>rmdir</code> = carpetas vacías.</div>
+    </article>
+
+    <article class="cmd" id="c-echo" data-search="echo imprimir escribir texto pantalla fichero">
+      <h3><code>echo</code><span class="badge">4.013, 4.031–4.033</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Repite lo que te digo». Escribe un texto en la pantalla… o, con <code>&gt;</code>, dentro de un fichero.</div>
+      <code class="syntax">echo texto</code>
+      <code class="ex">echo "Hola, Mundo"                       <span class="q"># lo muestra en pantalla</span>
+echo "Linux es genial" &gt; prueba.txt       <span class="q"># crea prueba.txt con esa línea</span>
+echo "Aprendiendo comandos" &gt;&gt; prueba.txt <span class="q"># añade otra línea al final</span>
+echo CFGS &gt;&gt; listado.txt                  <span class="q"># añade la palabra CFGS (sin comillas)</span></code>
+      <p>Las comillas hacen falta cuando hay espacios o signos raros; con una sola palabra, no.</p>
+    </article>
+
+    <article class="cmd" id="c-cat" data-search="cat mostrar contenido fichero concatenar unir -n numerar">
+      <h3><code>cat</code><span class="badge">4.034, 4.037, 4.042, 4.043, 4.063, 4.084</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Enséñame lo que hay dentro de este fichero». También sirve para <b>unir</b> varios ficheros en uno. (<i>concatenate</i>)</div>
+      <code class="syntax">cat [-n] fichero1 [fichero2 …]</code>
+      <code class="ex">cat prueba.txt                                     <span class="q"># muestra el fichero</span>
+cat -n notas.txt                                   <span class="q"># lo muestra con las líneas numeradas</span>
+cat archivo1.txt archivo2.txt &gt; combinado.txt      <span class="q"># une los dos en uno nuevo</span>
+cat /etc/passwd                                    <span class="q"># fichero de usuarios del sistema</span></code>
+      <div class="label">Verás con <code>cat -n notas.txt</code> (ejemplo inventado)</div>
+      <code class="out">     1  Pablo:Garcia:Lopez:7:5:8
+     2  Daniela:Martin:Ruiz:9:6:7
+     3  Pablo:Sanz:Gil:4:8:6
+     4  Lucia:Perez:Mora:10:9:9</code>
+    </article>
+  </div>
+</section>
+
+<!-- ================= REDIRECCIONES ================= -->
+<section id="redir" data-section>
+  <h2>3 · Redirecciones y tuberías: <code>&gt;</code>, <code>&gt;&gt;</code>, <code>|</code></h2>
+  <div class="cmd wide" data-search="redireccion > >> < pipe tuberia | salida fichero sobrescribe añade">
+    <div class="plain"><b class="t">La idea</b>Normalmente el resultado de un comando sale por la <b>pantalla</b>. Con estos símbolos lo desvías: a un fichero (<code>&gt;</code>, <code>&gt;&gt;</code>) o a otro comando (<code>|</code>).</div>
+    <div class="tablewrap"><table>
+      <tr><th>Símbolo</th><th>Qué hace</th><th>Ejemplo</th></tr>
+      <tr><td><code>&gt;</code></td><td>guarda la salida en un fichero. <b>Borra lo que hubiera</b> (o lo crea)</td><td><code>echo "Linux es genial" &gt; prueba.txt</code></td></tr>
+      <tr><td><code>&gt;&gt;</code></td><td>guarda la salida <b>al final</b> del fichero, sin borrar nada</td><td><code>date &gt;&gt; archivo1.txt</code> · <code>cal &gt;&gt; archivo2.txt</code></td></tr>
+      <tr><td><code>|</code></td><td>pasa la salida de un comando como entrada del siguiente</td><td><code>ps aux | grep ssh</code></td></tr>
+    </table></div>
+    <div class="note ok"><b>Regla fácil:</b> <code>&gt;</code> = «a un fichero, empezando de cero» · <code>&gt;&gt;</code> = «a un fichero, añadiendo» · <code>|</code> = «al siguiente comando». Después de <code>&gt;</code> siempre va un <i>fichero</i>; después de <code>|</code> siempre un <i>comando</i>.</div>
+    <div class="label">Una tubería paso a paso</div>
+    <code class="ex">ps aux | grep ssh
+<span class="q"># 1) ps aux      → lista TODOS los procesos
+# 2) |            → "pásale eso al siguiente"
+# 3) grep ssh     → quédate solo con las líneas que contienen "ssh"</span></code>
+    <p>Se pueden encadenar varios: <code>cut … | tr … | grep … | sort …</code>. Cada comando trabaja con lo que le deja el anterior.</p>
+  </div>
+</section>
+
+<!-- ================= BÚSQUEDA Y FILTROS ================= -->
+<section id="busqueda" data-section>
+  <h2>4 · Buscar y trabajar con el contenido</h2>
+  <p class="lead">En los ejemplos uso el <code>notas.txt</code> inventado de 4 alumnos de la sección «Cómo responder». Estos comandos <b>nunca modifican</b> el fichero original: solo enseñan un resultado (si quieres guardarlo, usa <code>&gt;</code>).</p>
+  <div class="grid">
+
+    <article class="cmd" id="c-grep" data-search="grep buscar texto palabra lineas contienen -v -i -n -c">
+      <h3><code>grep</code><span class="badge">4.038–4.041, 4.062, 4.064, 4.131</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Enséñame solo las líneas que contienen esta palabra». Es el buscador del terminal.</div>
+      <code class="syntax">grep [-opciones] palabra [fichero…]</code>
+      <table>
+        <tr><th>Opción</th><th>Qué cambia</th></tr>
+        <tr><td><code>-v</code></td><td>al revés: líneas que <b>NO</b> contienen la palabra</td></tr>
+        <tr><td><code>-i</code></td><td>no distingue mayúsculas de minúsculas</td></tr>
+        <tr><td><code>-n</code></td><td>muestra el número de cada línea</td></tr>
+        <tr><td><code>-c</code></td><td>solo cuenta cuántas líneas coinciden</td></tr>
+      </table>
+      <code class="ex">grep "Linux" prueba.txt        <span class="q"># líneas de prueba.txt con "Linux"</span>
+grep 5 combinado.txt           <span class="q"># líneas con el número 5</span>
+grep -v 5 combinado.txt        <span class="q"># líneas SIN el 5</span>
+grep Daniela *.txt             <span class="q"># busca en TODOS los .txt de la carpeta</span>
+grep lliurex /etc/passwd</code>
+      <div class="label">Verás con <code>grep Pablo notas.txt</code></div>
+      <code class="out">Pablo:Garcia:Lopez:7:5:8
+Pablo:Sanz:Gil:4:8:6</code>
+      <div class="note bad"><b>Tu fallo (4.039):</b> <code>grep "5" …</code>. La solución no lleva comillas: <code>$ grep 5 combinado.txt</code>.</div>
+    </article>
+
+    <article class="cmd" id="c-find" data-search="find buscar ficheros carpetas nombre -name -type -exec">
+      <h3><code>find</code><span class="badge">lista del profe</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>Si <code>grep</code> busca <i>dentro</i> de los ficheros, <code>find</code> busca <b>los propios ficheros y carpetas</b> (por nombre, tipo…), mirando también en todas las subcarpetas.</div>
+      <code class="syntax">find dónde-buscar criterio [acción]</code>
+      <table>
+        <tr><th>Criterio</th><th>Busca…</th></tr>
+        <tr><td><code>-name "x"</code></td><td>por nombre (admite <code>*</code>)</td></tr>
+        <tr><td><code>-type f</code></td><td>solo <b>f</b>icheros</td></tr>
+        <tr><td><code>-type d</code></td><td>solo <b>d</b>irectorios (carpetas)</td></tr>
+        <tr><td><code>-user nombre</code></td><td>los que pertenecen a ese usuario</td></tr>
+      </table>
+      <code class="ex">find . -name notas.txt          <span class="q"># desde aquí (.), un fichero llamado notas.txt</span>
+find /home -name "*.txt"        <span class="q"># todos los .txt bajo /home</span>
+find . -type d                  <span class="q"># solo las carpetas de aquí para abajo</span>
+find . -name "fic*" -exec ls -l {} \;
+<span class="q"># por cada fichero que empiece por "fic", ejecuta ls -l sobre él ({} = el fichero encontrado)</span></code>
+      <div class="note">Ojo: el primer argumento es <b>dónde</b> buscar (<code>.</code> = aquí, <code>/</code> = todo el disco). Pon los patrones con <code>*</code> entre comillas para que los interprete <code>find</code> y no el terminal. No ha salido en tus ejercicios: lo he hecho con lo que explica el PDF.</div>
+    </article>
+
+    <article class="cmd" id="c-head" data-search="head tail primeras ultimas lineas -n">
+      <h3><code>head</code> y <code id="c-tail">tail</code><span class="badge">4.044, 4.045, 4.116, 4.121</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b><code>head</code> = «la cabeza»: las <b>primeras</b> líneas. <code>tail</code> = «la cola»: las <b>últimas</b>. Sin número enseñan 10.</div>
+      <code class="syntax">head -n NÚMERO fichero
+tail -n NÚMERO fichero</code>
+      <code class="ex">head -n 3 notas.txt         <span class="q"># las 3 primeras líneas</span>
+tail -n 5 notas.txt         <span class="q"># las 5 últimas</span>
+dmesg | head -n 5           <span class="q"># las 5 primeras líneas de la salida de dmesg</span></code>
+      <div class="label">Verás con <code>head -n 2 notas.txt</code></div>
+      <code class="out">Pablo:Garcia:Lopez:7:5:8
+Daniela:Martin:Ruiz:9:6:7</code>
+    </article>
+
+    <article class="cmd" id="c-sort" data-search="sort ordenar -k -t -n -r campo numerico inverso alfabetico">
+      <h3><code>sort</code><span class="badge">4.046–4.049, 4.059, 4.069–4.071</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Ordena las líneas». Por defecto ordena de la A a la Z mirando la línea desde el principio.</div>
+      <code class="syntax">sort [-opciones] fichero</code>
+      <table>
+        <tr><th>Opción</th><th>Qué hace</th></tr>
+        <tr><td><code>-k N</code></td><td>ordena por el <b>campo</b> número N (columna)</td></tr>
+        <tr><td><code>-t ":"</code></td><td>dice cuál es el <b>separador</b> de campos. En <code>notas.txt</code> son los <code>:</code></td></tr>
+        <tr><td><code>-n</code></td><td>ordena <b>como números</b> (imprescindible con notas)</td></tr>
+        <tr><td><code>-r</code></td><td><b>r</b>everso: de mayor a menor / de Z a A</td></tr>
+      </table>
+      <code class="ex">sort -k 1 notas.txt                    <span class="q"># por nombre</span>
+sort -k 2 -t : notas.txt                <span class="q"># por apellido 1 (campo 2, separador :)</span>
+sort -k 3 -t : notas.txt                <span class="q"># por apellido 2</span>
+sort -k2 -r -t ":" notas.txt            <span class="q"># apellido 1, de Z a A</span>
+sort -k4 -n notas2.txt | head -n 6      <span class="q"># las 6 notas1 más bajas (campo 4)</span>
+sort -k5 -n -r notas2.txt | head -n 3   <span class="q"># las 3 notas2 más altas (campo 5)</span></code>
+      <div class="label">Verás con <code>sort -k 2 -t : notas.txt</code> (por apellido 1)</div>
+      <code class="out">Pablo:Garcia:Lopez:7:5:8
+Daniela:Martin:Ruiz:9:6:7
+Lucia:Perez:Mora:10:9:9
+Pablo:Sanz:Gil:4:8:6</code>
+      <div class="note ok"><b>¿Por qué <code>-n</code>?</b> Sin él, <code>10</code> iría antes que <code>4</code> (compara carácter a carácter y «1» &lt; «4»). Con <code>-n</code> compara el valor: 4, 7, 9, 10.</div>
+      <div class="note ok"><b>Receta «los N mejores/peores»:</b> ordena por la nota con <code>-n</code> (y <code>-r</code> si quieres de mayor a menor) y corta con <code>| head -n N</code>.</div>
+      <div class="note bad"><b>Tus fallos:</b> olvidabas <code>-t :</code> en <code>notas.txt</code>; escribías <code>-k 2,2</code> en vez de <code>-k 2</code>; y en <code>notas2.txt</code> (tabuladores) usabas <code>-t':'</code>, que ahí no hace falta.</div>
+    </article>
+
+    <article class="cmd" id="c-wc" data-search="wc contar lineas palabras bytes -l -w -c">
+      <h3><code>wc</code><span class="badge">4.050, 4.051, 4.058</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Cuenta». Líneas, palabras o bytes de un fichero. (<i>word count</i>)</div>
+      <code class="syntax">wc [-l | -w | -c] fichero</code>
+      <table>
+        <tr><th>Opción</th><th>Cuenta</th></tr>
+        <tr><td><code>-l</code></td><td><b>l</b>íneas (= alumnos, en notas.txt)</td></tr>
+        <tr><td><code>-w</code></td><td><b>w</b>ords: palabras</td></tr>
+        <tr><td><code>-c</code></td><td>bytes (≈ caracteres; el tamaño)</td></tr>
+      </table>
+      <code class="ex">wc -l notas.txt      <span class="q"># nº de líneas</span>
+wc -c prueba.txt     <span class="q"># tamaño en bytes</span>
+wc -w notas2.txt     <span class="q"># nº de palabras</span></code>
+      <div class="label">Verás con <code>wc -l notas.txt</code> (ejemplo de 4 alumnos)</div>
+      <code class="out">4 notas.txt</code>
+    </article>
+
+    <article class="cmd" id="c-cut" data-search="cut cortar campos columnas -d -f -c delimitador">
+      <h3><code>cut</code><span class="badge">ejercicios 4.053–4.056, 4.059–4.061, 4.065, 4.072</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Quédate solo con estas columnas». Como ocultar las columnas que no quieres de una hoja de cálculo.</div>
+      <code class="syntax">cut -d "SEPARADOR" -f CAMPOS fichero
+cut -c RANGO fichero</code>
+      <table>
+        <tr><th>Opción</th><th>Qué hace</th></tr>
+        <tr><td><code>-d ":"</code></td><td><b>d</b>elimitador: el carácter que separa los campos</td></tr>
+        <tr><td><code>-f 1,2,4</code></td><td><b>f</b>ields: los campos que quieres, separados por comas (<code>1-3</code> = del 1 al 3)</td></tr>
+        <tr><td><code>-c1-4</code></td><td><b>c</b>aracteres: de la posición 1 a la 4 de cada línea</td></tr>
+      </table>
+      <code class="ex">cut -d ":" -f 1,2 notas.txt        <span class="q"># nombre y apellido 1</span>
+cut -d ":" -f 1,2,4 notas.txt      <span class="q"># nombre, apellido 1 y nota 1</span>
+cut -f 1,6 -d ':' notas.txt        <span class="q"># primer y último campo</span>
+cut -f 1,6 notas2.txt              <span class="q"># igual, en el de tabuladores (sin -d)</span>
+cut -d ":" -f1 /etc/passwd         <span class="q"># nombres de usuario del sistema</span>
+cut -c1-4 notas.txt                <span class="q"># los 4 primeros caracteres de cada línea</span></code>
+      <div class="label">Verás con <code>cut -d ":" -f 1,2,4 notas.txt</code></div>
+      <code class="out">Pablo:Garcia:7
+Daniela:Martin:9
+Pablo:Sanz:4
+Lucia:Perez:10</code>
+      <div class="note bad"><b>Tus fallos:</b> <code>-d ':'</code> → <code>-d ":"</code>; en 4.054 usaste los campos 1,2,3 pero la nota 1 es el <b>4</b>; y en 4.060 el último campo es el <b>6</b>, no el 4.</div>
+    </article>
+
+    <article class="cmd" id="c-tr" data-search="tr traducir sustituir reemplazar cambiar caracteres -d -s tabulador">
+      <h3><code>tr</code><span class="badge">ejercicios 4.052, 4.055–4.057, 4.073–4.076</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Cambia este carácter por este otro» (o bórralo). Funciona letra a letra, como «buscar y reemplazar» de un procesador de textos.</div>
+      <code class="syntax">tr "este" "por este"
+tr -d "borra estos"</code>
+      <p>Solo trabaja con lo que le llega por tubería (<code>|</code>), no recibe nombre de fichero.</p>
+      <code class="ex">grep Daniela notas.txt | tr ":" " "      <span class="q"># cambia los : por espacios</span>
+cut -f 1,2 -d":" notas.txt | tr ":" "-"  <span class="q"># cambia los : por guiones</span>
+cat notas.txt | tr ":" "\t" &gt; notas2.txt  <span class="q"># \t = tabulador; guarda el resultado</span>
+cat notas2.txt | tr -d "a"                <span class="q"># borra todas las letras "a"</span>
+cat notas2.txt | tr -d "A-Z"              <span class="q"># borra todas las MAYÚSCULAS (A-Z = rango)</span>
+cat notas.txt | tr -s ":" "#"             <span class="q"># cambia : por #</span></code>
+      <div class="label">Verás con <code>grep Daniela notas.txt | tr ":" " "</code></div>
+      <code class="out">Daniela Martin Ruiz 9 6 7</code>
+      <div class="note bad"><b>Tus fallos:</b> el comando funcionaba, pero con comillas simples <code>' '</code>. Usa dobles <code>" "</code>.</div>
+    </article>
+
+    <article class="cmd wide" id="c-receta" data-search="receta tuberia combinar cut tr grep sort 4.059 pipeline encadenar">
+      <h3>Ejemplo completo: encadenar comandos (4.059)</h3>
+      <p><i>«Nombre, 2 apellidos y 3.ª nota de los alumnos que se llamen Pablo, separados por tabulador y ordenados por nota.»</i></p>
+      <code class="ex">cut -f1,2,3,6 -d":" notas.txt | tr ":" "\t" | grep Pablo | sort -k4</code>
+      <table>
+        <tr><th>Paso</th><th>Qué hace</th><th>Resultado (con el ejemplo)</th></tr>
+        <tr><td><code>cut -f1,2,3,6 -d":" notas.txt</code></td><td>deja solo los campos 1, 2, 3 y 6</td><td><code>Pablo:Garcia:Lopez:8</code>… (4 líneas)</td></tr>
+        <tr><td><code>| tr ":" "\t"</code></td><td>cambia los <code>:</code> por tabuladores</td><td>mismas líneas, con tabuladores</td></tr>
+        <tr><td><code>| grep Pablo</code></td><td>se queda solo con las de Pablo</td><td>2 líneas</td></tr>
+        <tr><td><code>| sort -k4</code></td><td>ordena por el campo 4 (la nota)</td><td>primero Sanz (6), luego Garcia (8)</td></tr>
+      </table>
+      <div class="note">La solución sigue este orden: <b>cut → tr → grep → sort</b>. Tú pusiste el <code>grep</code> el primero, con comillas simples; daba el mismo resultado, pero no coincidía con el texto esperado.</div>
+    </article>
+
+    <article class="cmd" id="c-gzip" data-search="gzip comprimir descomprimir -k -d gz zip">
+      <h3><code>gzip</code><span class="badge">4.066–4.068</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Comprime el fichero» para que ocupe menos (como un .zip). El resultado acaba en <code>.gz</code>. <b>Por defecto borra el original.</b></div>
+      <code class="syntax">gzip [-k] [-d] fichero</code>
+      <table>
+        <tr><th>Opción</th><th>Qué hace</th></tr>
+        <tr><td><code>-k</code></td><td><b>k</b>eep: conserva el original</td></tr>
+        <tr><td><code>-d</code></td><td><b>d</b>escomprime</td></tr>
+      </table>
+      <code class="ex">gzip -k notas.txt        <span class="q"># crea notas.txt.gz y MANTIENE notas.txt</span>
+rm notas.txt             <span class="q"># 4.067: borrar el original</span>
+gzip -d notas.txt.gz     <span class="q"># descomprimir: vuelve notas.txt</span></code>
+    </article>
+  </div>
+</section>
+
+<!-- ================= ENLACES ================= -->
+<section id="enlaces" data-section>
+  <h2>5 · Enlaces e inodos <span class="badge extra" style="font-size:12px">ejercicios 4.077–4.092</span></h2>
+  <div class="grid">
+    <article class="cmd" id="c-ln" data-search="ln enlace duro simbolico blando -s inodo hard soft link acceso directo">
+      <h3><code>ln</code></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>Crea un <b>segundo nombre</b> para un fichero. Hay dos clases:
+        <br>• <b>Enlace duro</b> = dos etiquetas pegadas a <i>la misma caja</i>. Son el mismo fichero con dos nombres.
+        <br>• <b>Enlace simbólico</b> (<code>-s</code>) = un <i>acceso directo</i>, como los de Windows: apunta al fichero, pero es otra cosa.</div>
+      <code class="syntax">ln existente nuevo          <span class="q"># enlace DURO</span>
+ln -s existente nuevo       <span class="q"># enlace SIMBÓLICO</span></code>
+      <code class="ex">ls -i notas.txt                      <span class="q"># ver el inodo (el "DNI" del fichero)</span>
+ln notas.txt enlace_duro.txt         <span class="q"># enlace duro</span>
+ln -s notas.txt simbolico.txt        <span class="q"># enlace simbólico</span>
+ln enlace_duro.txt notas.txt         <span class="q"># "dejar las cosas como estaban"</span></code>
+      <div class="label">Verás con <code>ls -li</code> (inventado)</div>
+      <code class="out">1835012 -rw-rw-r-- 2 lliurex lliurex 120 nov 23 10:05 enlace_duro.txt
+1835012 -rw-rw-r-- 2 lliurex lliurex 120 nov 23 10:05 notas.txt
+1835020 lrwxrwxrwx 1 lliurex lliurex   9 nov 23 10:07 simbolico.txt -&gt; notas.txt</code>
+      <p>Mira: el <b>número de la izquierda</b> (inodo) es igual en los duros; el simbólico tiene otro. El <b>número tras los permisos</b> (2, 2, 1) es la cantidad de enlaces.</p>
+    </article>
+
+    <article class="cmd" data-search="diferencia enlace duro simbolico inodo numero enlaces borrar original">
+      <h3>Duro vs simbólico</h3>
+      <div class="tablewrap"><table>
+        <tr><th></th><th>Duro</th><th>Simbólico (<code>-s</code>)</th></tr>
+        <tr><td>Inodo</td><td><b>igual</b> que el original</td><td><b>distinto</b></td></tr>
+        <tr><td>Contenido</td><td>igual</td><td>igual (lo lee del original)</td></tr>
+        <tr><td>Nº de enlaces</td><td>sube a <b>2</b></td><td>el enlace tiene <b>1</b></td></tr>
+        <tr><td>Borras el original…</td><td>sigue funcionando (baja a 1 enlace)</td><td><b>error</b> (el acceso directo apunta a la nada)</td></tr>
+        <tr><td>Primer carácter de <code>ls -l</code></td><td><code>-</code></td><td><code>l</code></td></tr>
+      </table></div>
+    </article>
+
+    <article class="cmd wide" data-search="respuestas conceptuales enlaces 4.078 4.080 4.081 4.083 4.087 4.088 4.089 4.090 4.091 iguales distintos error">
+      <h3>Respuestas de «concepto» de este bloque</h3>
+      <div class="tablewrap"><table>
+        <tr><th>Nº</th><th>Pregunta</th><th>Respuesta</th></tr>
+        <tr><td>4.078</td><td>¿Enlaces de <code>notas.txt</code> (antes de ln)?</td><td><code>1</code></td></tr>
+        <tr><td>4.080</td><td>Inodos de <code>notas.txt</code> y <code>enlace_duro.txt</code></td><td><code>iguales</code></td></tr>
+        <tr><td>4.081</td><td>¿Enlaces de <code>notas.txt</code> tras el <code>ln</code>?</td><td><code>2</code></td></tr>
+        <tr><td>4.083</td><td>Tras borrar <code>notas.txt</code>: enlaces de <code>enlace_duro.txt</code></td><td><code>1</code></td></tr>
+        <tr><td>4.087</td><td>Enlaces de <code>simbolico.txt</code></td><td><code>1</code></td></tr>
+        <tr><td>4.088</td><td>Inodos de <code>notas.txt</code> y <code>simbolico.txt</code></td><td><code>Distintos</code></td></tr>
+        <tr><td>4.089</td><td>Contenido de ambos</td><td><code>iguales</code></td></tr>
+        <tr><td>4.090</td><td>Carácter de un enlace simbólico en <code>ls -l</code></td><td><code>l</code></td></tr>
+        <tr><td>4.091</td><td>Borras <code>notas.txt</code> y haces <code>cat simbolico.txt</code></td><td><code>error</code></td></tr>
+      </table></div>
+      <div class="note bad"><b>Tu fallo:</b> en 4.078, 4.080, 4.081, 4.088, 4.089 y 4.091 respondiste con el comando; el enunciado pedía el <b>resultado</b> (un número o una palabra).</div>
+    </article>
+  </div>
+</section>
+
+<!-- ================= PERMISOS ================= -->
+<section id="permisos" data-section>
+  <h2>6 · Permisos: <code>chmod</code> <span class="badge extra" style="font-size:12px">ejercicios 4.093–4.106</span></h2>
+  <div class="grid">
+
+    <article class="cmd wide" id="c-perm-leer" data-search="ls -l permisos leer rwx propietario grupo otros tipo fichero">
+      <h3>Qué son los permisos y cómo se leen</h3>
+      <div class="plain"><b class="t">La idea</b>Cada fichero dice <b>quién</b> puede hacer <b>qué</b> con él. Hay 3 acciones y 3 tipos de personas.</div>
+      <div class="two">
+        <div>
+          <table>
+            <tr><th>Letra</th><th>Acción</th></tr>
+            <tr><td><code>r</code></td><td><b>r</b>ead: leer el contenido</td></tr>
+            <tr><td><code>w</code></td><td><b>w</b>rite: modificar / borrar</td></tr>
+            <tr><td><code>x</code></td><td>e<b>x</b>ecute: ejecutarlo como programa (en carpetas: entrar)</td></tr>
+          </table>
+        </div>
+        <div>
+          <table>
+            <tr><th>Letra</th><th>Persona</th></tr>
+            <tr><td><code>u</code></td><td><b>u</b>ser: el dueño del fichero</td></tr>
+            <tr><td><code>g</code></td><td><b>g</b>roup: su grupo</td></tr>
+            <tr><td><code>o</code></td><td><b>o</b>thers: todos los demás</td></tr>
+            <tr><td><code>a</code></td><td><b>a</b>ll: los tres a la vez</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="label">Cómo se lee la primera columna de <code>ls -l</code></div>
+      <code class="out">-rw-rw-r--   1  lliurex  lliurex  120  nov 23 10:05  notas.txt
+│└┬┘└┬┘└┬┘
+│ │  │  └ otros:   r--  (solo leer)
+│ │  └ grupo:      rw-  (leer y escribir)
+│ └ dueño:         rw-  (leer y escribir)
+└ tipo: «-» fichero · «d» carpeta · «l» enlace simbólico</code>
+      <p>Cada <code>-</code> dentro de los permisos significa «ese permiso NO está». <code>-rw-rw-r--</code> es lo que verás normalmente en <code>notas.txt</code> (4.094).</p>
+    </article>
+
+    <article class="cmd wide" id="c-chmod" data-search="chmod octal numerica simbolica 4 2 1 777 755 644 600 000 555 permisos calculadora">
+      <h3><code>chmod</code><span class="badge">4.095–4.106</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Cambia los permisos de este fichero». Hay dos formas de decírselo: con <b>números</b> (octal) o con <b>letras</b> (simbólica).</div>
+
+      <div class="label">Forma 1 · Octal (números)</div>
+      <p>Cada permiso vale un número: <b>r = 4 · w = 2 · x = 1</b>. Sumas los que quieras dar. Escribes <b>3 cifras</b>: dueño, grupo, otros.</p>
+      <div class="tablewrap"><table>
+        <tr><th>Suma</th><th>Permisos</th><th>Cómo sale</th></tr>
+        <tr><td><b>7</b></td><td>rwx</td><td>4+2+1</td></tr>
+        <tr><td><b>6</b></td><td>rw-</td><td>4+2</td></tr>
+        <tr><td><b>5</b></td><td>r-x</td><td>4+1</td></tr>
+        <tr><td><b>4</b></td><td>r--</td><td>4</td></tr>
+        <tr><td><b>0</b></td><td>---</td><td>nada</td></tr>
+      </table></div>
+      <code class="ex">chmod 777 notas.txt   <span class="q"># rwx rwx rwx → todo para todos</span>
+chmod 000 notas.txt   <span class="q"># --- --- --- → nada para nadie</span>
+chmod 555 notas.txt   <span class="q"># r-x r-x r-x → sin escritura, con lectura y ejecución</span>
+chmod 600 notas.txt   <span class="q"># rw- --- --- → leer y escribir solo el dueño</span>
+chmod 644 notas.txt   <span class="q"># rw- r-- r-- → dueño lee/escribe, el resto solo lee</span></code>
+
+      <div class="label">Forma 2 · Simbólica (letras)</div>
+      <p>Se escribe <b>a quién</b> + <b>operación</b> + <b>permiso</b>. Operaciones: <code>+</code> añade, <code>-</code> quita, <code>=</code> fija exactamente.</p>
+      <code class="syntax">chmod [u|g|o|a][+|-|=][r|w|x] fichero</code>
+      <code class="ex">chmod a+rwx notas.txt        <span class="q"># AÑADE r, w y x a todos (4.095)</span>
+chmod a-w notas.txt          <span class="q"># QUITA la escritura a todos (4.096, 4.100)</span>
+chmod go-rw,a+x notas.txt    <span class="q"># al grupo y otros les quita r y w; a todos les añade x (4.106)</span>
+chmod +x script.sh           <span class="q"># permiso de ejecución (típico para scripts)</span></code>
+
+      <div class="note bad"><b>Tus fallos:</b> en 4.095, 4.099, 4.103 y 4.105 usaste <code>=</code> (<code>a=rwx</code>, <code>u=rw,g=,o=</code>) y el examen usa <code>+</code> y <code>-</code>. Es válido en Linux, pero la plataforma comparaba con su texto.</div>
+
+      <div class="label">Las soluciones «raras» del examen</div>
+      <p>El PDF las escribe en forma larga, <code>+r+w-x</code>. En el examen, copia exactamente esto; en una terminal real usa la forma corta de la derecha (con los espacios tras las comas el comando real fallaría).</p>
+      <div class="tablewrap"><table>
+        <tr><th>Nº</th><th>Pide</th><th>Solución del examen</th><th>Forma real equivalente</th></tr>
+        <tr><td>4.099</td><td>todos los permisos</td><td><code>chmod u+r+w+x, g+r+w+x, o+r+w+x notas.txt</code></td><td><code>chmod a+rwx notas.txt</code></td></tr>
+        <tr><td>4.103</td><td>rw- solo el dueño</td><td><code>chmod u+r+w-x, g-r-w-x, o-r-w-x</code></td><td><code>chmod 600 notas.txt</code></td></tr>
+        <tr><td>4.105</td><td>lectura todos, rw el dueño</td><td><code>chmod u+r+w-x, g+r-w-x, o+r-w-x notas.txt</code></td><td><code>chmod 644 notas.txt</code></td></tr>
+      </table></div>
+
+      <div class="label">Calculadora (para practicar): marca casillas o escribe el número</div>
+      <div class="calc" id="calc">
+        <span class="h"></span><span class="h">leer r</span><span class="h">escribir w</span><span class="h">ejecutar x</span>
+        <span>dueño (u)</span><label><input type="checkbox" id="c-ur"></label><label><input type="checkbox" id="c-uw"></label><label><input type="checkbox" id="c-ux"></label>
+        <span>grupo (g)</span><label><input type="checkbox" id="c-gr"></label><label><input type="checkbox" id="c-gw"></label><label><input type="checkbox" id="c-gx"></label>
+        <span>otros (o)</span><label><input type="checkbox" id="c-or"></label><label><input type="checkbox" id="c-ow"></label><label><input type="checkbox" id="c-ox"></label>
+      </div>
+      <div class="calc-out">
+        <span>Número:</span><input type="text" id="c-num" maxlength="3" value="000" aria-label="Número octal">
+        <code id="c-sym">----------</code>
+        <code id="c-cmd">chmod 000 fichero</code>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ================= SISTEMA ================= -->
+<section id="sistema" data-section>
+  <h2>7 · Información del sistema <span class="badge" style="font-size:12px">lista del profe · 4.107–4.133</span></h2>
+  <p class="lead">Comandos «de consulta»: no cambian nada, solo te cuentan cosas de tu ordenador. Casi todos se ejecutan solos.</p>
+  <div class="cmd wide" data-search="uname lscpu free df lsblk lspci lsusb uptime who dmesg date cal du sistema hardware">
+    <div class="tablewrap"><table>
+      <tr><th>Comando (respuesta)</th><th>En cristiano</th><th>Nº</th></tr>
+      <tr id="s-uname"><td><code>$ uname -a</code></td><td>Datos del sistema operativo y del kernel (nombre, versión, tipo de procesador). <code>-a</code> = <b>a</b>ll, todo. <i>(unix name)</i></td><td>4.107</td></tr>
+      <tr id="s-lscpu"><td><code>$ lscpu</code></td><td>Ficha del <b>procesador</b> (CPU): modelo, núcleos, velocidad. <i>(list CPU)</i></td><td>4.108</td></tr>
+      <tr id="s-free"><td><code>$ free -h</code></td><td>Memoria <b>RAM</b> y <b>swap</b> (la memoria de «reserva» en disco). <code>-h</code> = <b>h</b>uman: en GB/MB en vez de bytes. <i>(libre)</i></td><td>4.109</td></tr>
+      <tr id="s-df"><td><code>$ df -h</code><br><code>$ df -h /var</code></td><td>Espacio de los <b>discos</b>: cuánto hay usado y libre. <code>-h</code> = legible. Con una ruta, solo de ese sitio. <i>(disk free)</i></td><td>4.110, 4.124, 4.133</td></tr>
+      <tr id="s-lsblk"><td><code>$ lsblk</code></td><td>Lista de <b>discos y particiones</b> (dispositivos de bloque). <i>(list block devices)</i></td><td>4.111</td></tr>
+      <tr id="s-lspci"><td><code>$ lspci</code></td><td>Lista las piezas conectadas a la placa base por <b>PCI</b> (tarjeta gráfica, red, sonido…).</td><td>4.112</td></tr>
+      <tr id="s-lsusb"><td><code>$ lsusb</code></td><td>Lista lo que hay conectado por <b>USB</b> (ratón, pendrive…).</td><td>4.113</td></tr>
+      <tr id="s-uptime"><td><code>$ uptime</code></td><td>Cuánto tiempo lleva el ordenador encendido y lo «cargado» que está.</td><td>4.114</td></tr>
+      <tr id="s-who"><td><code>$ who</code></td><td>Qué usuarios hay conectados ahora. <code>who am i</code> = quién eres tú.</td><td>4.115</td></tr>
+      <tr id="s-dmesg"><td><code>$ dmesg -H | head -n 5</code><br><code>$ dmesg | head -n 5</code></td><td>Mensajes que el <b>kernel</b> ha ido apuntando (arranque, hardware, fallos). Son muchísimos, así que se recorta con <code>head -n 5</code> a las 5 primeras líneas. <code>-H</code> = fechas legibles.</td><td>4.116, 4.121</td></tr>
+      <tr id="s-du"><td><code>$ du -sh /home</code><br><code>$ du -ah /home</code></td><td>Cuánto <b>ocupa</b> una carpeta. <code>-s</code> = solo el total (<b>s</b>ummary), <code>-a</code> = detalle de <b>a</b>ll, cada fichero; <code>-h</code> = legible. <i>(disk usage)</i></td><td>4.125, 4.126</td></tr>
+    </table></div>
+    <div class="note bad"><b>Tu fallo en 4.107–4.116:</b> estaban bien, pero sin el <code>$ </code> delante. Recuerda: pegar desde el <code>$</code>, incluido.</div>
+    <div class="note"><b><code>df</code> vs <code>du</code>:</b> <code>df</code> mira los <i>discos</i> enteros (¿cuánto queda libre?); <code>du</code> mira <i>carpetas</i> (¿cuánto ocupa esto?).</div>
+  </div>
+
+  <div class="grid">
+    <article class="cmd" id="s-date" data-search="date fecha hora formato %Y %m %d %H %M %S">
+      <h3><code>date</code><span class="badge">4.035, 4.118</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>Te dice la fecha y hora actuales. Con <code>+"…"</code> eliges cómo mostrarla.</div>
+      <table>
+        <tr><th>Código</th><th>Es</th><th>Código</th><th>Es</th></tr>
+        <tr><td><code>%Y</code></td><td>año (2025)</td><td><code>%H</code></td><td>hora (00–23)</td></tr>
+        <tr><td><code>%m</code></td><td>mes (01–12)</td><td><code>%M</code></td><td>minutos</td></tr>
+        <tr><td><code>%d</code></td><td>día</td><td><code>%S</code></td><td>segundos</td></tr>
+      </table>
+      <code class="ex">date                             <span class="q"># fecha y hora tal cual</span>
+date &gt;&gt; archivo1.txt              <span class="q"># añade la fecha al final del fichero (4.035)</span>
+date +"%Y-%m-%d %H:%M:%S"        <span class="q"># → 2025-01-08 14:35:45</span></code>
+      <div class="note"><b>4.118:</b> pedía el formato <code>2025-01-08 14:35:45</code> (con la pista <code>date +" "</code>), pero la plataforma tenía guardada como correcta solo <code>$ date</code>. Tu <code>date +"%Y-%m-%d %H:%M:%S"</code> es lo que daría ese formato de verdad. Si te sale otra vez, duda entre las dos y pregunta al profe.</div>
+    </article>
+
+    <article class="cmd" id="s-cal" data-search="cal calendario mes año 2025">
+      <h3><code>cal</code><span class="badge">4.036, 4.119, 4.120</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>Dibuja un calendario en la terminal.</div>
+      <code class="ex">cal                  <span class="q"># el mes actual</span>
+cal 2025             <span class="q"># el año 2025 entero</span>
+cal &gt;&gt; archivo2.txt   <span class="q"># añade el calendario al fichero (4.036)</span>
+cal 6 1996           <span class="q"># junio de 1996 (el año, con 4 cifras)</span></code>
+      <div class="label">Verás con <code>cal</code> (algo así)</div>
+      <code class="out">   noviembre 2026
+lu ma mi ju vi sá do
+                   1
+ 2  3  4  5  6  7  8
+ 9 10 11 12 13 14 15
+16 17 18 19 20 21 22
+23 24 25 26 27 28 29
+30</code>
+    </article>
+  </div>
+</section>
+
+<!-- ================= PROCESOS Y PAQUETES ================= -->
+<section id="procesos" data-section>
+  <h2>8 · Procesos y paquetes <span class="badge" style="font-size:12px">lista del profe · 4.122–4.132</span></h2>
+  <div class="plain" style="max-width:900px"><b class="t">Antes de empezar</b>Un <b>proceso</b> es un programa que está funcionando ahora mismo. Cada uno tiene un número, el <b>PID</b>. Un <b>paquete</b> es un programa que se puede instalar.</div>
+  <div class="grid" style="margin-top:12px">
+
+    <article class="cmd" id="c-ps" data-search="ps aux sort cpu memoria procesos grep ssh mysql listar">
+      <h3><code>ps</code><span class="badge">4.128–4.132</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«¿Qué programas están funcionando?». <code>ps aux</code> los lista todos, con su PID, el uso de CPU y de memoria.</div>
+      <code class="syntax">ps aux [--sort -%cpu | --sort -%mem]</code>
+      <code class="ex">ps aux --sort -%cpu        <span class="q"># los que más CPU gastan, primero</span>
+ps aux --sort -%mem        <span class="q"># los que más memoria gastan, primero</span>
+ps aux | grep ssh          <span class="q"># solo los relacionados con ssh</span>
+ps aux | grep mysql</code>
+      <p>El <code>-</code> delante de <code>%cpu</code> significa «de mayor a menor». Como son muchos procesos, se filtra con <code>grep</code> (tubería).</p>
+      <div class="note bad"><b>Tus fallos:</b> <code>--sort=-%cpu</code> → la solución lleva espacio: <code>--sort -%cpu</code>.</div>
+    </article>
+
+    <article class="cmd" id="c-kill" data-search="kill pkill killall pid terminar matar proceso chrome">
+      <h3><code>kill</code><span class="badge">4.122, 4.130</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Cierra este programa». Se le da el PID del proceso que quieres terminar (lo ves con <code>ps</code>).</div>
+      <code class="ex">kill 1234           <span class="q"># termina el proceso número 1234 (4.122)</span>
+kill chrome         <span class="q"># así viene la solución de 4.130</span>
+pkill chrome        <span class="q"># lo que funciona de verdad para matar por nombre</span></code>
+      <div class="note"><b>4.130:</b> tu <code>pkill chrome</code> es lo correcto en la práctica, pero la plataforma esperaba <code>$ kill chrome</code>. En el examen, sigue lo que ponga la solución.</div>
+    </article>
+
+    <article class="cmd" id="c-htop" data-search="htop monitor recursos interactivo">
+      <h3><code>htop</code><span class="badge">4.123</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>Un «administrador de tareas» (como el de Windows) en la terminal: procesos, CPU y memoria en vivo. Se sale con <kbd>q</kbd>.</div>
+      <code class="ex">htop</code>
+      <p>Si no está instalado: <code>sudo apt-get install htop</code>.</p>
+    </article>
+
+    <article class="cmd" id="c-apt" data-search="apt apt-get install update upgrade show paquete htop tree sudo actualizar instalar">
+      <h3><code>apt-get</code> / <code>apt</code><span class="badge">lista del profe · 4.019, 4.127</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>Es la «tienda de aplicaciones» del terminal: instala y actualiza programas. Necesita permisos de administrador, por eso lleva <code>sudo</code> delante.</div>
+      <table>
+        <tr><th>Comando</th><th>Qué hace</th></tr>
+        <tr><td><code>apt-get update</code></td><td>pone al día la <b>lista</b> de programas disponibles. No instala nada</td></tr>
+        <tr><td><code>apt-get upgrade</code></td><td>instala las versiones <b>nuevas</b> de lo que ya tienes</td></tr>
+        <tr><td><code>apt-get install paquete</code></td><td>instala un programa nuevo</td></tr>
+        <tr><td><code>apt show paquete</code></td><td>muestra la <b>ficha</b> de un paquete (descripción, versión)</td></tr>
+      </table>
+      <code class="ex">sudo apt-get update
+sudo apt-get upgrade
+sudo apt install tree
+apt show htop           <span class="q"># 4.127</span></code>
+      <div class="note"><b>Duda:</b> no sé si el examen espera <code>apt-get update</code> con o sin <code>sudo</code> delante (en 4.019 la regla fue «lo mínimo»). Sin <code>sudo</code> falla en una terminal real, así que si el enunciado no lo menciona, pregunta al profe.</div>
+    </article>
+  </div>
+</section>
+
+<!-- ================= EXTRAS ================= -->
+<section id="extras" data-section>
+  <h2>Extras del PDF (no han salido en los ejercicios)</h2>
+  <p class="lead">Por si el examen añade algo más. Vienen en el «Resumen órdenes de Linux».</p>
+  <div class="cmd wide" data-search="extras man help clear uniq paste sed more tee su chown chgrp umask time logname tty passwd cmp diff">
+    <div class="tablewrap"><table>
+      <tr><th>Comando</th><th>Para qué</th><th>Ejemplo</th></tr>
+      <tr><td><code>man</code> / <code>help</code></td><td>manual detallado / ayuda breve de cualquier comando</td><td><code>man ls</code></td></tr>
+      <tr><td><code>clear</code></td><td>limpia la pantalla</td><td><code>clear</code></td></tr>
+      <tr><td><code>more</code></td><td>muestra un texto largo por páginas (espacio = siguiente, <kbd>q</kbd> = salir)</td><td><code>cat fichero | more</code></td></tr>
+      <tr><td><code>uniq</code></td><td>quita líneas repetidas seguidas (ordena antes); <code>-c</code> las cuenta</td><td><code>sort f | uniq -c</code></td></tr>
+      <tr><td><code>paste</code></td><td>junta ficheros lado a lado, en columnas</td><td><code>paste f1 f2</code></td></tr>
+      <tr><td><code>sed</code></td><td>buscar y reemplazar texto en un flujo</td><td><code>sed "s/Smith/White/g" gente</code></td></tr>
+      <tr><td><code>tee</code></td><td>guarda la salida en un fichero y a la vez la deja pasar</td><td><code>ls -l | tee listado | more</code></td></tr>
+      <tr><td><code>cmp</code> / <code>diff</code></td><td>comparan dos ficheros</td><td><code>diff f1 f2</code></td></tr>
+      <tr><td><code>su</code></td><td>cambia de usuario (por defecto, administrador)</td><td><code>su pepe</code></td></tr>
+      <tr><td><code>chown</code> / <code>chgrp</code></td><td>cambia el dueño / el grupo de un fichero</td><td><code>chown pepe fichero</code></td></tr>
+      <tr><td><code>passwd</code></td><td>cambia la contraseña</td><td><code>passwd</code></td></tr>
+      <tr><td><code>tty</code> / <code>logname</code></td><td>terminal actual / nombre con el que entraste</td><td><code>tty</code></td></tr>
+      <tr><td><code>time</code></td><td>mide cuánto tarda un comando</td><td><code>time ls</code></td></tr>
+    </table></div>
+    <p><b>Carpetas típicas de Linux:</b> <code>/</code> raíz · <code>/home</code> carpetas de los usuarios · <code>/dev</code> dispositivos · <code>/etc</code> configuración · <code>/usr</code> programas · <code>/var</code> logs y datos variables · <code>/tmp</code> temporales.</p>
+  </div>
+</section>
+
+<!-- ================= BANCO ================= -->
+<section id="banco" data-section>
+  <h2>Banco de ejercicios 4.001–4.133</h2>
+  <p class="lead">La solución correcta de cada pregunta, tal como hay que pegarla. Clic en una respuesta = copiar. En rojo, las que fallaste (con tu respuesta debajo).</p>
+  <div class="filters">
+    <label><input type="checkbox" id="only-linux"> Solo las que fallé</label>
+    <label><input type="checkbox" id="quiz-linux"> Modo test (oculta las soluciones; clic para ver)</label>
+    <span class="stat" id="stat-linux"></span>
+  </div>
+  <div class="bank" id="bank-linux" data-key="linux"></div>
+</section>
+</div><!-- /pane-linux -->
+
+<div class="pane off" id="pane-ps">
+<!-- ================= POWERSHELL: EMPIEZA ================= -->
+<section id="ps-empieza" data-section>
+  <h2>PowerShell · Empieza aquí</h2>
+  <p class="lead">PowerShell es la terminal de comandos de Windows. La idea es la misma que en Linux: escribes una orden, pulsas <kbd>Intro</kbd> y ves el resultado. Cambian los nombres de los comandos.</p>
+
+  <div class="grid">
+    <article class="cmd" data-search="prompt ps c:\ simbolo mayor que > responder incluido profe">
+      <h3>1. El prompt y el símbolo <code>&gt;</code></h3>
+<div class="prompt"><span class="u">PS</span> <span class="p">C:\PS\cursos</span><span class="d">&gt;</span> Get-ChildItem</div>
+      <ul class="tips">
+        <li><b>PS</b> = estás en PowerShell.</li>
+        <li><b>C:\PS\cursos</b> = la carpeta en la que estás.</li>
+        <li><b>&gt;</b> = «listo, escribe». En una terminal real no se teclea.</li>
+      </ul>
+      <div class="note big bad"><b>Regla del profe para TODOS los ejercicios:</b> la respuesta se escribe <b>a partir del carácter <code>&gt;</code>, incluido</b>.<br>
+      Si estás en <code>C:\&gt;</code> y quieres listar: <code>PS C:\&gt; Get-ChildItem</code> → respondes <code>&gt; Get-ChildItem</code>.</div>
+      <div class="note"><b>No confundir:</b> el <code>&gt;</code> inicial es parte de la <i>respuesta</i>. Un segundo <code>&gt;</code> en medio (<code>&gt; Get-ChildItem -Name &gt; lista.txt</code>) es la <i>redirección</i> a un fichero.</div>
+    </article>
+
+    <article class="cmd" data-search="cmdlet verbo sustantivo get set new remove mayusculas tab autocompletar">
+      <h3>2. Los comandos se llaman «cmdlets»: Verbo-Sustantivo</h3>
+      <p>Casi todos tienen forma <code>Verbo-Cosa</code>, así que se pueden <b>adivinar</b>: <code>Get-Process</code> = «obtener procesos».</p>
+      <div class="tablewrap"><table>
+        <tr><th>Verbo</th><th>Significa</th><th>Ejemplos del examen</th></tr>
+        <tr><td><code>Get</code></td><td>obtener / mostrar</td><td><code>Get-Content</code>, <code>Get-Process</code>, <code>Get-Service</code></td></tr>
+        <tr><td><code>Set</code></td><td>cambiar / fijar</td><td><code>Set-Location</code></td></tr>
+        <tr><td><code>New</code></td><td>crear</td><td><code>New-Item</code></td></tr>
+        <tr><td><code>Remove</code></td><td>borrar</td><td><code>Remove-Item</code></td></tr>
+        <tr><td><code>Copy</code> / <code>Move</code></td><td>copiar / mover</td><td><code>Copy-Item</code>, <code>Move-Item</code></td></tr>
+        <tr><td><code>Start</code> / <code>Stop</code></td><td>arrancar / parar</td><td><code>Start-Service</code>, <code>Stop-Process</code></td></tr>
+        <tr><td><code>Write</code> · <code>Out</code></td><td>escribir · sacar a…</td><td><code>Write-Output</code>, <code>Out-File</code></td></tr>
+        <tr><td><code>Select</code> · <code>Sort</code> · <code>Where</code> · <code>Measure</code></td><td>escoger · ordenar · filtrar · medir</td><td><code>Select-String</code>, <code>Sort-Object</code>, <code>Where-Object</code></td></tr>
+      </table></div>
+      <p><b>No distingue mayúsculas</b> (<code>set-location</code> = <code>Set-Location</code>) y <kbd>Tab</kbd> autocompleta.</p>
+    </article>
+
+    <article class="cmd" data-search="parametros -Name -Path -Property interruptores valor posicional sintaxis anatomia">
+      <h3>3. Cómo se escribe un comando</h3>
+      <div class="anat">
+        <div><b>Get-ChildItem</b><span>el cmdlet<br>(listar contenido)</span></div>
+        <div><b>-Path C:\PS</b><span>parámetro + valor<br>(dónde mirar)</span></div>
+        <div><b>-Name</b><span>parámetro «interruptor»<br>(sin valor: solo nombres)</span></div>
+      </div>
+      <ul class="tips">
+        <li>Los <b>parámetros</b> empiezan por guion y llevan el <b>nombre entero</b>: <code>-Path</code>, <code>-Name</code> (no una letra como en Linux).</li>
+        <li>Unos llevan <b>valor</b> detrás (<code>-Path C:\PS</code>); otros son <b>interruptores</b> y se escriben solos (<code>-Name</code>, <code>-File</code>, <code>-Directory</code>, <code>-Append</code>, <code>-Descending</code>).</li>
+        <li>El primer parámetro se puede escribir sin nombre: <code>Set-Location PS</code> = <code>Set-Location -Path PS</code>.</li>
+        <li>Los textos con espacios van entre comillas: <code>"Hola mundo"</code>.</li>
+      </ul>
+    </article>
+
+    <article class="cmd" data-search="rutas . .. .\ ..\ barra invertida relativa absoluta c:\">
+      <h3>4. Rutas</h3>
+      <p>Funcionan como en Linux, pero con la barra al revés: <code>\</code>. La raíz de cada disco es <code>C:\</code>.</p>
+      <table>
+        <tr><th>Ruta</th><th>Significa</th></tr>
+        <tr><td><code>C:\PS</code></td><td>absoluta (vale desde cualquier sitio)</td></tr>
+        <tr><td><code>.</code> / <code>.\cursos</code></td><td>la carpeta actual / «cursos» dentro de aquí (relativa)</td></tr>
+        <tr><td><code>..</code></td><td>la carpeta de arriba (padre)</td></tr>
+        <tr><td><code>..\..</code></td><td>dos niveles arriba</td></tr>
+      </table>
+    </article>
+
+    <article class="cmd" data-search="alias cd ls dir cat mkdir echo sort ps start abreviaturas">
+      <h3>5. Alias: apodos cortos</h3>
+      <p>Muchos cmdlets tienen un apodo (algunos iguales a Linux). Si el enunciado dice «<i>utiliza el alias cd</i>», escribe el alias.</p>
+      <div class="tablewrap"><table>
+        <tr><th>Alias</th><th>Cmdlet</th></tr>
+        <tr><td><code>cd</code></td><td><code>Set-Location</code></td></tr>
+        <tr><td><code>pwd</code></td><td><code>Get-Location</code></td></tr>
+        <tr><td><code>ls</code>, <code>dir</code></td><td><code>Get-ChildItem</code></td></tr>
+        <tr><td><code>cat</code>, <code>type</code></td><td><code>Get-Content</code></td></tr>
+        <tr><td><code>cp</code> · <code>mv</code> · <code>rm</code></td><td><code>Copy-Item</code> · <code>Move-Item</code> · <code>Remove-Item</code></td></tr>
+        <tr><td><code>echo</code></td><td><code>Write-Output</code></td></tr>
+        <tr><td><code>sort</code></td><td><code>Sort-Object</code></td></tr>
+        <tr><td><code>start</code></td><td><code>Start-Process</code></td></tr>
+        <tr><td><code>mkdir</code></td><td>crea carpetas (<code>New-Item -ItemType Directory</code>)</td></tr>
+      </table></div>
+    </article>
+
+    <article class="cmd" data-search="tuberia pipe objetos propiedades where-object operadores -eq -like -ne -gt -lt">
+      <h3>6. La tubería <code>|</code> pasa «objetos», no texto</h3>
+      <div class="plain"><b class="t">Idea</b>En Linux la salida es texto. En PowerShell cada resultado es un <b>objeto con propiedades</b> (un servicio tiene <code>Name</code> y <code>Status</code>; un fichero tiene <code>Length</code>…). Por eso se ordena o filtra <b>por propiedad</b>.</div>
+      <code class="ex">Get-ChildItem | Sort-Object -Property Length     <span class="q"># ordena por la propiedad Length (tamaño)</span>
+Get-Service | Where-Object Status -eq "Running"  <span class="q"># deja solo los que tengan Status = Running</span></code>
+      <table>
+        <tr><th>Operador</th><th>Significa</th></tr>
+        <tr><td><code>-eq</code></td><td>igual (<b>eq</b>ual)</td></tr>
+        <tr><td><code>-ne</code></td><td>distinto</td></tr>
+        <tr><td><code>-like "*texto*"</code></td><td>contiene (<code>*</code> = cualquier cosa)</td></tr>
+        <tr><td><code>-gt</code> / <code>-lt</code></td><td>mayor / menor que</td></tr>
+      </table>
+    </article>
+
+    <article class="cmd wide" data-search="equivalencias linux powershell tabla comparar pwd ls cd mkdir cp mv rm echo cat grep head tail sort wc ps kill df">
+      <h3>Equivalencias Linux ↔ PowerShell</h3>
+      <p>Si ya sabes el comando de Linux, aquí tienes su «gemelo»:</p>
+      <div class="tablewrap"><table>
+        <tr><th>Qué quieres</th><th>Linux</th><th>PowerShell</th></tr>
+        <tr><td>Dónde estoy</td><td><code>pwd</code></td><td><code>Get-Location</code></td></tr>
+        <tr><td>Cambiar de carpeta</td><td><code>cd</code></td><td><code>Set-Location</code> (alias <code>cd</code>)</td></tr>
+        <tr><td>Listar</td><td><code>ls</code></td><td><code>Get-ChildItem</code></td></tr>
+        <tr><td>Crear carpeta</td><td><code>mkdir</code></td><td><code>New-Item -ItemType Directory</code> / <code>mkdir</code></td></tr>
+        <tr><td>Copiar / mover / borrar</td><td><code>cp</code> / <code>mv</code> / <code>rm</code></td><td><code>Copy-Item</code> / <code>Move-Item</code> / <code>Remove-Item</code></td></tr>
+        <tr><td>Escribir texto</td><td><code>echo</code></td><td><code>Write-Output</code></td></tr>
+        <tr><td>Guardar en fichero</td><td><code>&gt;</code> y <code>&gt;&gt;</code></td><td><code>Out-File</code> y <code>Out-File -Append</code> (también valen <code>&gt;</code> y <code>&gt;&gt;</code>)</td></tr>
+        <tr><td>Ver un fichero</td><td><code>cat</code></td><td><code>Get-Content</code></td></tr>
+        <tr><td>Buscar texto</td><td><code>grep</code></td><td><code>Select-String</code></td></tr>
+        <tr><td>Primeras / últimas líneas</td><td><code>head -n</code> / <code>tail -n</code></td><td><code>Get-Content -TotalCount</code> / <code>-Tail</code></td></tr>
+        <tr><td>Ordenar</td><td><code>sort</code></td><td><code>Sort-Object</code></td></tr>
+        <tr><td>Contar líneas</td><td><code>wc -l</code></td><td><code>Measure-Object -Line</code> o <code>.Count</code></td></tr>
+        <tr><td>Procesos / matar uno</td><td><code>ps</code> / <code>kill</code></td><td><code>Get-Process</code> / <code>Stop-Process</code></td></tr>
+        <tr><td>Discos</td><td><code>df</code></td><td><code>Get-PSDrive</code></td></tr>
+        <tr><td>Info del sistema</td><td><code>uname</code>, <code>lscpu</code></td><td><code>Get-ComputerInfo</code>, <code>systeminfo</code></td></tr>
+        <tr><td>Estructura en árbol</td><td><code>tree</code></td><td><code>tree</code> (igual)</td></tr>
+      </table></div>
+    </article>
+  </div>
+</section>
+
+<!-- ================= POWERSHELL: CÓMO RESPONDER ================= -->
+<section id="ps-reglas" data-section>
+  <h2>PowerShell · Cómo responder</h2>
+  <div class="cmd wide" data-search="reglas responder profe > incluido pistas write-output write-host errores plataforma">
+    <div class="note big bad"><b>MUY IMPORTANTE (profe):</b> la respuesta va <b>desde el carácter <code>&gt;</code>, incluido</b>, y luego un espacio y el comando. Ejemplo: <code>&gt; Get-ChildItem</code>.</div>
+    <div class="label">Lo que se deduce de tus resultados</div>
+    <ul class="tips">
+      <li><b>Lee la pista del enunciado</b>: casi siempre te da el cmdlet exacto («utiliza <code>New-Item -ItemType Directory -Name</code>», «<code>Select-String -Path … -Pattern …</code>»). Úsalo tal cual.</li>
+      <li>Aquí el corrector fue <b>más flexible</b> que en Linux: te dio por buenas muchas variantes (por ejemplo <code>-Path .\cursos</code> en vez de <code>-Name cursos</code>). Está marcado en el banco.</li>
+      <li>Pero hay cmdlets que sí tienen que coincidir: <b>mostrar texto = <code>Write-Output</code></b> (con <code>Write-Host</code> fallaste ps31), <b>servicios = <code>Start-Service</code> / <code>Stop-Service -Name "Spooler"</code></b> directos (no con <code>Where-Object</code>), <b>parar proceso = <code>Stop-Process -Name "notepad"</code></b>.</li>
+      <li><b>Información del sistema</b>: la forma esperada es <code>Get-ComputerInfo -Property Propiedad1, Propiedad2</code>. Con <code>| Select-Object</code> te lo aceptaron casi siempre, salvo en ps67.</li>
+      <li>La pregunta <b>ps68</b> («todos los servicios en ejecución») tenía como solución solo <code>Get-Service</code>; el filtro «Running» es la ps69.</li>
+      <li>Las comillas no suelen importar, pero cuando la solución las lleva (<code>"Spooler"</code>, <code>"notepad"</code>, <code>"Pablo"</code>) escríbelas igual.</li>
+    </ul>
+    <div class="note"><b>Fallos de la propia plataforma</b> (no tuyos): <b>ps8</b> era idéntica a la solución y salió fallada; en <b>ps71</b> la solución guardada era de otra pregunta; y varias soluciones traen erratas (<code>-File Path</code>, «proceo», <code>" Network "</code>, <code>-Filter .txt</code>). Si te pasa en el examen, anota el número y díselo al profe.</div>
+  </div>
+</section>
+
+<!-- ================= POWERSHELL: MAPA ================= -->
+<section id="ps-mapa" data-section>
+  <h2>PowerShell · Qué entra (lista del profe)</h2>
+  <div class="cmd wide" data-search="lista profe comandos powershell entran indice">
+    <div class="label">1 · Directorios y archivos</div>
+    <div class="map"><a href="#p-getlocation">Get-Location</a><a href="#p-newitem">New-Item</a><a href="#p-setlocation">Set-Location</a><a href="#p-getchilditem">Get-ChildItem</a><a href="#p-copyitem">Copy-Item</a><a href="#p-moveitem">Move-Item</a><a href="#p-removeitem">Remove-Item</a></div>
+    <div class="label">2 · Manipulación y búsqueda de contenido</div>
+    <div class="map"><a href="#p-writeoutput">Write-Output</a><a href="#p-getcontent">Get-Content</a><a href="#p-selectstring">Select-String</a><a href="#p-getchilditem">Get-ChildItem</a><a href="#p-outfile">Out-File</a><a href="#p-sortobject">Sort-Object</a></div>
+    <div class="label">3 · Información del sistema</div>
+    <div class="map"><a href="#p-getcomputerinfo">Get-ComputerInfo</a><a href="#p-getservice">Get-Service</a><a href="#p-getprocess">Get-Process</a><a href="#p-stopprocess">Stop-Process</a><a href="#p-systeminfo">systeminfo</a><a href="#p-getpsdrive">Get-PSDrive</a><a href="#p-gethotfix">Get-HotFix</a><a href="#p-getcounter">Get-Counter -ListSet</a><a href="#p-getwmiobject">Get-WmiObject</a></div>
+    <div class="label">También en tus ejercicios</div>
+    <div class="map"><a href="#p-tree">tree</a><a href="#p-newitem">mkdir</a><a href="#p-selectobject">Select-Object</a><a href="#p-whereobject">Where-Object</a><a href="#p-measure">Measure-Object</a><a href="#p-clearcontent">Clear-Content</a><a href="#p-getservice">Start-Service</a><a href="#p-stopprocess">start</a></div>
+    <div class="note"><b>Nota:</b> de los ejercicios que me has pasado faltan los números ps11–ps20 (o no existen). Los ps21–ps30 llegaron <b>sin solución</b>: las respuestas son mías, probadas en PowerShell 5.1 en una carpeta de prueba, y pueden no coincidir letra por letra con las del profe. <code>Get-Location</code>, <code>Move-Item</code> y <code>Get-Counter -ListSet</code> están en la lista del profe pero no en tus ejercicios: los he explicado con la documentación habitual de PowerShell.</div>
+  </div>
+</section>
+
+<!-- ================= POWERSHELL: DIRECTORIOS ================= -->
+<section id="ps-dirs" data-section>
+  <h2>PowerShell · 1 · Carpetas y archivos</h2>
+  <div class="grid">
+
+    <article class="cmd" id="p-getlocation" data-search="get-location pwd donde estoy ruta actual">
+      <h3><code>Get-Location</code><span class="badge">lista del profe</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«¿Dónde estoy?». Es el <code>pwd</code> de Linux. Alias: <code>pwd</code>, <code>gl</code>.</div>
+      <code class="ex">Get-Location</code>
+      <div class="label">Verás</div>
+      <code class="out">Path
+----
+C:\PS\cursos</code>
+    </article>
+
+    <article class="cmd" id="p-setlocation" data-search="set-location cd cambiar directorio entrar carpeta">
+      <h3><code>Set-Location</code><span class="badge">ps2, ps4, ps8, ps27</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Entra en esa carpeta». Es el <code>cd</code> de Linux (y también se puede escribir <code>cd</code>).</div>
+      <code class="syntax">Set-Location -Path ruta</code>
+      <code class="ex">cd c:\                         <span class="q"># ir a la raíz</span>
+set-location -Path PS          <span class="q"># entrar en PS (ps2)</span>
+cd cursos                      <span class="q"># con el alias (ps4)</span>
+cd ..                          <span class="q"># subir un nivel</span>
+cd C:\PS\cursos                <span class="q"># ps27: ruta ABSOLUTA (empieza por C:\ y vale desde cualquier sitio)</span></code>
+      <div class="note bad"><b>ps8:</b> tu <code>cd sistemas</code> era idéntica a la solución y salió fallada. Seguramente un fallo de la plataforma o un carácter invisible.</div>
+    </article>
+
+    <article class="cmd" id="p-newitem" data-search="new-item crear directorio carpeta fichero -ItemType -Name -Path mkdir">
+      <h3><code>New-Item</code> y <code>mkdir</code><span class="badge">ps1–ps7, ps9, ps21, ps23, ps26, ps28</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Crea algo nuevo»: una carpeta o un fichero. Con <code>-ItemType</code> dices qué tipo.</div>
+      <code class="syntax">New-Item -ItemType Directory -Name nombre
+New-Item -ItemType File -Name nombre.txt</code>
+      <code class="ex">New-Item -ItemType Directory -Name PS            <span class="q"># ps1: crea la carpeta PS aquí</span>
+New-Item -ItemType Directory -Name cursos        <span class="q"># ps3: ruta relativa (dentro de donde estás)</span>
+New-Item -ItemType Directory -Path .\cursos      <span class="q"># también dado por bueno</span>
+mkdir linux, macos, windows                      <span class="q"># ps9: varias carpetas a la vez, separadas por comas</span>
+mkdir Dir1, Dir2, Dir3                           <span class="q"># ps26: tres carpetas</span>
+New-Item -ItemType File -Name datos.csv          <span class="q"># ps28: un fichero vacío (ItemType File)</span>
+New-Item -ItemType File -Path aviso1.txt, aviso2.txt   <span class="q"># ps21/ps23: dos ficheros vacíos a la vez</span></code>
+      <p><code>-Name</code> = «con este nombre, aquí» · <code>-Path</code> = «en esta ruta». <code>.\</code> = «la carpeta actual».</p>
+      <div class="note"><b>Trampa (probada):</b> con <code>-Name</code> solo cabe <b>un</b> nombre; <code>New-Item -ItemType File -Name a.txt, b.txt</code> da error. Para crear varios de una vez usa <code>-Path a.txt, b.txt</code>, o repite el comando separándolos con <code>;</code>.</div>
+      <p><code>-ItemType Directory</code> crea una carpeta; <code>-ItemType File</code> crea un fichero vacío.</p>
+    </article>
+
+    <article class="cmd" id="p-getchilditem" data-search="get-childitem ls dir listar -Name -File -Directory -Filter -Recurse">
+      <h3><code>Get-ChildItem</code><span class="badge">ps22, ps29, ps39, ps41, ps46, ps47, ps53–ps57</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Lista lo que hay aquí». Es el <code>ls</code> de Linux (alias <code>ls</code>, <code>dir</code>, <code>gci</code>).</div>
+      <code class="syntax">Get-ChildItem [ruta] [-Name] [-File] [-Directory] [-Filter patrón] [-Recurse]</code>
+      <table>
+        <tr><th>Parámetro</th><th>Qué hace</th></tr>
+        <tr><td><code>-Name</code></td><td>solo los <b>nombres</b> (sin tamaño ni fecha)</td></tr>
+        <tr><td><code>-File</code></td><td>solo ficheros</td></tr>
+        <tr><td><code>-Directory</code></td><td>solo carpetas</td></tr>
+        <tr><td><code>-Filter *.txt</code></td><td>solo los que cumplan el patrón</td></tr>
+        <tr><td><code>-Recurse</code></td><td>entra también en las subcarpetas</td></tr>
+      </table>
+      <code class="ex">Get-ChildItem -Name                                  <span class="q"># ps39</span>
+Get-ChildItem -Name &gt; lista.txt                      <span class="q"># ps41: guarda solo los nombres</span>
+Get-ChildItem -File                                  <span class="q"># ps22: solo ficheros</span>
+Get-ChildItem -Path sistemas\windows                 <span class="q"># ps29: lista el contenido de OTRA carpeta (ruta relativa)</span>
+Get-ChildItem -Directory                             <span class="q"># ps56: solo carpetas</span>
+Get-ChildItem -File -Filter *.txt                    <span class="q"># ps47: solo los .txt</span>
+Get-ChildItem -Name -Filter notas*                   <span class="q"># ps57: nombres que empiezan por "notas"</span>
+Get-ChildItem | Sort-Object -Property Length         <span class="q"># ps46/53: ordenados por tamaño</span></code>
+      <div class="label">Verás con <code>Get-ChildItem</code> (inventado)</div>
+      <code class="out">    Directorio: C:\PS\cursos
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        23/11/2026     10:05                componentes
+-a----        23/11/2026     10:07            120 notas.txt</code>
+      <p><code>Mode</code> empieza por <code>d</code> en las carpetas. <code>Length</code> = tamaño en bytes.</p>
+    </article>
+
+    <article class="cmd" id="p-tree" data-search="tree arbol estructura ps10 ..\..">
+      <h3><code>tree</code><span class="badge">ps10</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>Dibuja el árbol de carpetas. Viene con Windows.</div>
+      <code class="ex">tree ..\..          <span class="q"># el árbol de la carpeta dos niveles más arriba (C:\PS)</span>
+tree /? | Out-File sintaxis.txt   <span class="q"># ps32: guarda la ayuda de tree en un fichero</span></code>
+      <p><code>/?</code> es la forma de pedir ayuda a los programas clásicos de Windows.</p>
+    </article>
+
+    <article class="cmd" id="p-copyitem" data-search="copy-item copiar cp fichero carpeta recurse">
+      <h3><code>Copy-Item</code><span class="badge">lista del profe · ps24</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Haz una copia». El original se queda. Es el <code>cp</code> de Linux.</div>
+      <code class="syntax">Copy-Item -Path origen -Destination destino [-Recurse]</code>
+      <code class="ex">Copy-Item -Path notas.txt -Destination copia.txt      <span class="q"># copia un fichero</span>
+Copy-Item sistemas componentes -Recurse               <span class="q"># copia una carpeta con su contenido</span>
+Copy-Item -Path *.log -Destination cursos\sistemas\windows   <span class="q"># ps24: copia TODOS los .log (el * es un comodín) a otra carpeta</span></code>
+      <p><code>-Recurse</code> = «y todo lo de dentro» (necesario para carpetas con contenido).</p>
+    </article>
+
+    <article class="cmd" id="p-moveitem" data-search="move-item mover renombrar mv">
+      <h3><code>Move-Item</code><span class="badge">lista del profe</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Cámbialo de sitio» (o de nombre). Es el <code>mv</code> de Linux.</div>
+      <code class="syntax">Move-Item -Path origen -Destination destino</code>
+      <code class="ex">Move-Item -Path notas.txt -Destination .\cursos       <span class="q"># mueve a la carpeta cursos</span>
+Move-Item -Path notas.txt -Destination apuntes.txt    <span class="q"># renombra</span></code>
+    </article>
+
+    <article class="cmd" id="p-removeitem" data-search="remove-item borrar eliminar rm del recurse confirm whatif">
+      <h3><code>Remove-Item</code><span class="badge">lista del profe · ps25, ps30</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Borra». Cuidado: no va a la papelera. Es el <code>rm</code> de Linux.</div>
+      <code class="syntax">Remove-Item -Path ruta [-Recurse]</code>
+      <code class="ex">Remove-Item -Path prueba.txt                 <span class="q"># borra un fichero</span>
+Remove-Item datos.csv                        <span class="q"># ps30</span>
+Remove-Item -Path *.log                      <span class="q"># ps25: borra TODOS los .log de la carpeta actual</span>
+Remove-Item -Path cursos -Recurse            <span class="q"># borra una carpeta con contenido</span>
+Remove-Item prueba.txt -WhatIf               <span class="q"># "simulacro": dice qué borraría, sin borrar</span></code>
+    </article>
+
+  </div>
+</section>
+
+<!-- ================= POWERSHELL: CONTENIDO ================= -->
+<section id="ps-contenido" data-section>
+  <h2>PowerShell · 2 · Manipular y buscar contenido</h2>
+  <div class="grid">
+
+    <article class="cmd" id="p-writeoutput" data-search="write-output echo mostrar texto write-host consola ps31 ps40">
+      <h3><code>Write-Output</code><span class="badge">ps31, ps35, ps36, ps40, ps42</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Muestra este texto». Es el <code>echo</code> de Linux. Para guardarlo en un fichero se le añade <code>| Out-File</code>.</div>
+      <code class="ex">Write-Output "¡Hola, mundo!"                                     <span class="q"># ps31</span>
+Write-Output "Primera línea" | Out-File prueba.txt                 <span class="q"># ps35: crea el fichero</span>
+Write-Output "Segunda línea" | Out-File prueba.txt -Append         <span class="q"># ps36: añade al final</span>
+Get-Content sintaxis.txt ; Write-Output "COMANDO COMPLETADO"      <span class="q"># ps40: dos comandos seguidos con ;</span></code>
+      <div class="note bad"><b>Tu fallo (ps31):</b> usaste <code>Write-Host</code>. El profe quiere <code>Write-Output</code>. (En ps40 te aceptaron <code>Write-Host</code>, pero no te arriesgues.)</div>
+      <p>El <code>;</code> separa comandos independientes: se ejecutan uno tras otro.</p>
+    </article>
+
+    <article class="cmd" id="p-outfile" data-search="out-file guardar fichero redirigir > >> append">
+      <h3><code>Out-File</code> (y <code>&gt;</code>, <code>&gt;&gt;</code>)<span class="badge">ps32, ps35, ps36, ps42, ps49, ps51, ps59</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Guarda esto en un fichero». Como en Linux, el <code>&gt;</code> funciona, y el profe dice: <b><code>&gt;</code> es <code>Out-File</code></b> y <b><code>&gt;&gt;</code> es <code>Out-File -Append</code></b>.</div>
+      <table>
+        <tr><th>Escribes</th><th>Equivale a</th><th>Efecto</th></tr>
+        <tr><td><code>comando | Out-File x.txt</code></td><td><code>comando &gt; x.txt</code></td><td>crea / <b>sobrescribe</b></td></tr>
+        <tr><td><code>comando | Out-File x.txt -Append</code></td><td><code>comando &gt;&gt; x.txt</code></td><td><b>añade</b> al final</td></tr>
+      </table>
+      <code class="ex">Get-Content notas.txt -TotalCount 10 | Out-File notas_10.txt          <span class="q"># ps49</span>
+Get-Content notas.txt, notas_10.txt | Out-File notas_combinado.txt    <span class="q"># ps51: une dos ficheros</span>
+Get-Content -Path notas.txt -Tail 5 | Out-File notas_5.txt            <span class="q"># ps59</span></code>
+    </article>
+
+    <article class="cmd" id="p-getcontent" data-search="get-content cat ver fichero -Tail -TotalCount -Head primeras ultimas lineas count">
+      <h3><code>Get-Content</code><span class="badge">ps33, ps36–ps38, ps44, ps45, ps49–ps52, ps59, ps60</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Enséñame el contenido del fichero». Es el <code>cat</code> de Linux. Además hace de <code>head</code> y de <code>tail</code>.</div>
+      <table>
+        <tr><th>Escribes</th><th>Resultado</th></tr>
+        <tr><td><code>Get-Content sintaxis.txt</code></td><td>el fichero entero</td></tr>
+        <tr><td><code>Get-Content sintaxis.txt -TotalCount 5</code></td><td>las <b>primeras</b> 5 líneas (como <code>head</code>)</td></tr>
+        <tr><td><code>Get-Content sintaxis.txt -Tail 3</code></td><td>las <b>últimas</b> 3 líneas (como <code>tail</code>)</td></tr>
+        <tr><td><code>(Get-Content notas.txt).Count</code></td><td>nº de líneas (ps44)</td></tr>
+        <tr><td><code>Get-Content notas.txt | Measure-Object -Line</code></td><td>nº de líneas (ps45)</td></tr>
+        <tr><td><code>Get-Content notas.txt | Sort-Object</code></td><td>líneas ordenadas A-Z (ps38, ps52)</td></tr>
+        <tr><td><code>Get-Content notas.txt | Sort-Object -Descending</code></td><td>ordenadas Z-A (ps60)</td></tr>
+      </table>
+      <div class="note ok"><code>-Head</code> funciona igual que <code>-TotalCount</code> (te lo aceptaron en ps37). La solución usa <code>-TotalCount</code>.</div>
+    </article>
+
+    <article class="cmd" id="p-selectstring" data-search="select-string grep buscar texto -Pattern -Path ps34 ps48 ps58">
+      <h3><code>Select-String</code><span class="badge">ps34, ps48, ps58</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Enséñame las líneas que contienen esta palabra». Es el <code>grep</code> de Linux.</div>
+      <code class="syntax">Select-String -Path fichero -Pattern texto</code>
+      <code class="ex">Select-String -Path sintaxis.txt -Pattern carpeta     <span class="q"># ps34</span>
+Select-String -Path notas.txt -Pattern "Pablo"        <span class="q"># ps48</span>
+Select-String -Path notas.txt -Pattern "10"           <span class="q"># ps58</span>
+systeminfo | Select-String "Tiempo de arranque del sistema"   <span class="q"># filtrar la salida de otro comando</span></code>
+      <div class="label">Verás (el formato incluye fichero y nº de línea)</div>
+      <code class="out">notas.txt:1:Pablo:Garcia:Lopez:7:5:8
+notas.txt:3:Pablo:Sanz:Gil:4:8:6</code>
+    </article>
+
+    <article class="cmd" id="p-sortobject" data-search="sort-object ordenar -Property Length -Descending tamaño inverso">
+      <h3><code>Sort-Object</code><span class="badge">ps38, ps46, ps52–ps55, ps60, ps71, ps79, ps80</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Ordena». Sin nada, ordena el texto de A a Z. Con <code>-Property</code> ordena por una propiedad. <code>-Descending</code> = de mayor a menor.</div>
+      <code class="ex">Get-Content notas.txt | Sort-Object                                  <span class="q"># alfabético</span>
+Get-ChildItem | Sort-Object -Property Length                        <span class="q"># por tamaño, pequeño primero</span>
+Get-ChildItem | Sort-Object -Property Length -Descending            <span class="q"># grande primero</span>
+Get-Process | Sort-Object CPU -Descending                           <span class="q"># procesos por uso de CPU</span>
+Get-Service | Sort-Object Name                                      <span class="q"># servicios por nombre</span></code>
+    </article>
+
+    <article class="cmd" id="p-selectobject" data-search="select-object -First primeros seleccionar propiedades columnas">
+      <h3><code>Select-Object</code><span class="badge">ps55, ps73, ps80</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Quédate solo con…»: los <b>primeros N</b> resultados (<code>-First</code>) o solo ciertas <b>columnas</b> (propiedades).</div>
+      <code class="ex">Get-ChildItem | Sort-Object -Property Length -Descending | Select-Object -First 3   <span class="q"># los 3 más grandes (ps55)</span>
+Get-Service | Select-Object Name, Status                                              <span class="q"># solo esas 2 columnas, en ese orden (ps73)</span>
+Get-Process | Sort-Object CPU -Descending | Select-Object -First 5                  <span class="q"># los 5 que más CPU usan (ps80)</span></code>
+    </article>
+
+    <article class="cmd" id="p-measure" data-search="measure-object contar lineas -Line wc">
+      <h3><code>Measure-Object</code><span class="badge">ps45</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Cuenta / mide». Con <code>-Line</code> cuenta líneas (como <code>wc -l</code>).</div>
+      <code class="ex">Get-Content notas.txt | Measure-Object -Line
+(Get-Content notas.txt).Count        <span class="q"># otra forma (ps44); también vale .Length</span></code>
+      <div class="label">Verás (ejemplo de 4 líneas)</div>
+      <code class="out">Lines Words Characters Property
+----- ----- ---------- --------
+    4</code>
+    </article>
+
+    <article class="cmd" id="p-clearcontent" data-search="clear-content vaciar fichero contenido borrar ps43">
+      <h3><code>Clear-Content</code><span class="badge">ps43</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Vacía el fichero» (se queda el fichero, sin contenido). Distinto de <code>Remove-Item</code>, que borra el fichero entero.</div>
+      <code class="ex">Clear-Content -Path output.log</code>
+    </article>
+  </div>
+</section>
+
+<!-- ================= POWERSHELL: SISTEMA ================= -->
+<section id="ps-sistema" data-section>
+  <h2>PowerShell · 3 · Información del sistema, servicios y procesos</h2>
+  <div class="grid">
+
+    <article class="cmd" id="p-getcomputerinfo" data-search="get-computerinfo informacion sistema nombre equipo csname windowsproductname arquitectura teclado memoria property">
+      <h3><code>Get-ComputerInfo</code><span class="badge">ps61–ps67</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>La «ficha técnica» del ordenador: sistema operativo, hardware, nombre del equipo… Con <code>-Property</code> eliges solo los datos que quieres.</div>
+      <code class="ex">Get-ComputerInfo                                                    <span class="q"># ps61: todo</span>
+Get-ComputerInfo -Property csname                                   <span class="q"># ps62: nombre del equipo</span>
+Get-ComputerInfo -Property WindowsProductName                       <span class="q"># ps63: nombre del sistema (p. ej. Windows 11)</span>
+Get-ComputerInfo -Property CsProcessors, windowsVersion             <span class="q"># ps64: varias, separadas por coma</span>
+Get-ComputerInfo -Property OsArchitecture,KeyboardLayout            <span class="q"># ps65: 32/64 bits y teclado</span>
+Get-ComputerInfo -Property OsLastBootUpTime                         <span class="q"># ps66: último arranque</span>
+Get-ComputerInfo -property osTotalVisibleMemorySize                 <span class="q"># ps67: memoria instalada</span></code>
+      <div class="note bad"><b>Tu fallo (ps67):</b> usaste <code>| Select-Object …</code>. La solución es <code>Get-ComputerInfo -Property …</code>. Úsalo siempre así.</div>
+    </article>
+
+    <article class="cmd" id="p-getservice" data-search="get-service servicios running start-service stop-service spooler windows update where-object like network wuauserv">
+      <h3><code>Get-Service</code>, <code>Start-Service</code>, <code>Stop-Service</code><span class="badge">ps68–ps76</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>Un <b>servicio</b> es un programa que trabaja en segundo plano (impresión, actualizaciones, red). <code>Get-Service</code> los lista; <code>Start-</code> y <code>Stop-Service</code> los arrancan y paran.</div>
+      <code class="ex">Get-Service                                         <span class="q"># ps68: todos</span>
+Get-Service | Where-Object Status -eq "Running"      <span class="q"># ps69: solo los que están funcionando</span>
+Get-Service | Where-Object Name -like "*Network*"    <span class="q"># ps70: que contengan "Network"</span>
+Get-Service | Sort-Object Name                       <span class="q"># ps71: ordenados por nombre</span>
+Get-Service -Name "wuauserv"                         <span class="q"># ps72: Windows Update (nombre interno)</span>
+Get-Service | Select-Object Name, Status             <span class="q"># ps73</span>
+Get-Service -Name "Spooler"                          <span class="q"># ps75: cola de impresión</span>
+Stop-Service -Name "Spooler"                         <span class="q"># ps74: parar</span>
+Start-Service -Name "Spooler"                        <span class="q"># ps76: arrancar</span></code>
+      <div class="label">Verás (inventado)</div>
+      <code class="out">Status   Name       DisplayName
+------   ----       -----------
+Running  Spooler    Cola de impresión
+Stopped  wuauserv   Windows Update</code>
+      <div class="note bad"><b>Tus fallos:</b> ps74 y ps76 – lo hiciste con <code>Get-Service | Where-Object … | Stop-Service</code>; la solución es directa: <code>Stop-Service -Name "Spooler"</code> / <code>Start-Service -Name "Spooler"</code>. En ps68 («todos los servicios en ejecución») la solución es solo <code>Get-Service</code>.</div>
+    </article>
+
+    <article class="cmd" id="p-whereobject" data-search="where-object filtrar -eq -like -ne -gt operadores comparacion">
+      <h3><code>Where-Object</code><span class="badge">ps69, ps70, ps78</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«Déjame pasar solo los que cumplan esto». Como un colador: <code>Where-Object Propiedad -operador valor</code>.</div>
+      <code class="syntax">... | Where-Object Propiedad -operador "valor"</code>
+      <code class="ex">Get-Service | Where-Object Status -eq "Running"          <span class="q"># Status igual a Running</span>
+Get-Service | Where-Object Name -like "*Network*"        <span class="q"># el nombre contiene Network</span>
+Get-Process | Where-Object Name -like "*Microsoft*"      <span class="q"># ps78</span></code>
+      <p>Operadores: <code>-eq</code> igual · <code>-ne</code> distinto · <code>-like</code> con comodines <code>*</code> · <code>-gt</code> mayor · <code>-lt</code> menor.</p>
+    </article>
+
+    <article class="cmd" id="p-getprocess" data-search="get-process procesos cpu ordenar top 5 notepad">
+      <h3><code>Get-Process</code><span class="badge">ps71, ps77–ps80, ps82</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>«¿Qué programas están funcionando ahora?». Es el <code>ps</code> de Linux.</div>
+      <code class="ex">Get-Process                                                         <span class="q"># ps77: todos</span>
+Get-Process | Where-Object Name -like "*Microsoft*"                 <span class="q"># ps78</span>
+Get-Process | Sort-Object CPU -Descending                           <span class="q"># ps79: los que más CPU, primero</span>
+Get-Process | Sort-Object CPU -Descending | Select-Object -First 5  <span class="q"># ps80: los 5 primeros</span>
+Get-Process -Name "notepad"                                         <span class="q"># ps82: ¿existe notepad?</span></code>
+    </article>
+
+    <article class="cmd" id="p-stopprocess" data-search="stop-process start notepad matar proceso terminar abrir -Name">
+      <h3><code>Stop-Process</code> y <code>start</code><span class="badge">ps81–ps83</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b><code>start</code> abre un programa. <code>Stop-Process</code> lo cierra a la fuerza (como el <code>kill</code> de Linux).</div>
+      <code class="ex">start notepad                       <span class="q"># ps81: abre el Bloc de notas</span>
+Get-Process -Name "notepad"         <span class="q"># ps82: comprueba que está en marcha</span>
+Stop-Process -Name "notepad"        <span class="q"># ps83: ciérralo</span></code>
+      <div class="note bad"><b>ps83:</b> falló. La solución es <code>&gt; Stop-Process -Name "notepad"</code>, con <code>-Name</code> y comillas.</div>
+    </article>
+
+    <article class="cmd" id="p-systeminfo" data-search="systeminfo informacion sistema tiempo arranque nombre sistema operativo select-string">
+      <h3><code>systeminfo</code><span class="badge">ps84–ps86</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>Programa clásico de Windows (no es un cmdlet) que escribe un informe largo del sistema. Para ver solo una línea, se filtra con <code>Select-String</code>.</div>
+      <code class="ex">systeminfo                                                          <span class="q"># ps84: informe completo</span>
+systeminfo | Select-String "Nombre del sistema operativo"           <span class="q"># ps85</span>
+systeminfo | Select-String "Tiempo de arranque del sistema"         <span class="q"># ps86</span></code>
+      <p>Las etiquetas salen en el idioma de tu Windows: en español son «Nombre del sistema operativo», «Tiempo de arranque del sistema»…</p>
+    </article>
+
+    <article class="cmd" id="p-getpsdrive" data-search="get-psdrive discos unidades montados c: ps87">
+      <h3><code>Get-PSDrive</code><span class="badge">ps87</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>Lista las «unidades» que PowerShell ve: los discos (<code>C:</code>, <code>D:</code>…) y otras como el registro. Parecido a <code>df</code>.</div>
+      <code class="ex">Get-PSDrive</code>
+    </article>
+
+    <article class="cmd" id="p-gethotfix" data-search="get-hotfix actualizaciones instaladas kb parches ps88">
+      <h3><code>Get-HotFix</code><span class="badge">ps88</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>Lista las <b>actualizaciones de Windows</b> instaladas (con su código <code>KB…</code>).</div>
+      <code class="ex">Get-HotFix</code>
+    </article>
+
+    <article class="cmd" id="p-getcounter" data-search="get-counter -listset contadores rendimiento performance">
+      <h3><code>Get-Counter -ListSet</code><span class="badge">lista del profe</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>Windows mide muchísimas cosas del rendimiento (CPU, memoria, disco, red…) con «contadores», agrupados en «conjuntos». <code>-ListSet</code> te <b>lista esos conjuntos</b>.</div>
+      <code class="ex">Get-Counter -ListSet *                                    <span class="q"># todos los conjuntos disponibles</span>
+Get-Counter -ListSet Processor                            <span class="q"># el conjunto del procesador (en Windows en español puede llamarse "Procesador")</span>
+Get-Counter "\Processor(_Total)\% Processor Time"          <span class="q"># mide un contador concreto ahora</span></code>
+      <div class="note">No ha salido en tus ejercicios: está explicado con la documentación habitual. Si sale, lo más probable es <code>Get-Counter -ListSet *</code>.</div>
+    </article>
+
+    <article class="cmd wide" id="p-getwmiobject" data-search="get-wmiobject wmi clase win32_operatingsystem win32_processor win32_bios win32_logicaldisk win32_service ps89 ps90">
+      <h3><code>Get-WmiObject</code><span class="badge">ps89, ps90</span></h3>
+      <div class="plain"><b class="t">En pocas palabras</b>Pregunta a Windows por su hardware y sistema a través de «clases» WMI. Eliges la clase con <code>-Class</code>: es como elegir de qué pieza quieres la ficha.</div>
+      <code class="syntax">Get-WmiObject -Class NombreDeLaClase</code>
+      <code class="ex">Get-WmiObject -Class Win32_OperatingSystem      <span class="q"># ps89: sistema operativo</span>
+Get-WmiObject Win32_Processor                   <span class="q"># ps90: procesador (CPU)</span>
+Get-WmiObject -Class Win32_LogicalDisk          <span class="q"># discos lógicos</span></code>
+      <div class="tablewrap"><table>
+        <tr><th>Clase</th><th>Qué te da</th></tr>
+        <tr><td><code>Win32_OperatingSystem</code></td><td>sistema operativo</td></tr>
+        <tr><td><code>Win32_Processor</code></td><td>procesador</td></tr>
+        <tr><td><code>Win32_BIOS</code></td><td>BIOS</td></tr>
+        <tr><td><code>Win32_LogicalDisk</code></td><td>discos lógicos</td></tr>
+        <tr><td><code>Win32_NetworkAdapterConfiguration</code></td><td>configuración de las tarjetas de red</td></tr>
+        <tr><td><code>Win32_Service</code></td><td>servicios del sistema</td></tr>
+        <tr><td><code>Win32_ComputerSystem</code></td><td>datos generales del equipo (nombre, fabricante, modelo)</td></tr>
+      </table></div>
+      <p>Nota: <code>Get-WmiObject</code> existe en Windows PowerShell 5.1. En PowerShell 7 se sustituye por <code>Get-CimInstance</code>.</p>
+    </article>
+  </div>
+</section>
+
+<!-- ================= POWERSHELL: BANCO ================= -->
+<section id="ps-banco" data-section>
+  <h2>PowerShell · Banco de ejercicios</h2>
+  <p class="lead">Solución de cada pregunta (ps1–ps10 y ps21–ps90 que me has pasado), con su <code>&gt;</code> delante. Clic en una respuesta = copiar. En <b>rojo</b>, las falladas; en <b>azul</b>, ps21–ps30, que no traían solución (respuesta propuesta por mí); la línea naranja indica tu variante aceptada o erratas de la plataforma.</p>
+  <div class="filters">
+    <label><input type="checkbox" id="only-ps"> Solo las que fallé</label>
+    <label><input type="checkbox" id="quiz-ps"> Modo test (oculta las soluciones; clic para ver)</label>
+    <span class="stat" id="stat-ps"></span>
+  </div>
+  <div class="bank" id="bank-ps" data-key="ps"></div>
+</section>
+
+</div><!-- /pane-ps -->
+
+</main>
+
+<script>
+const E = [
+["4.001","Directorio en el que estás","pwd",0],
+["4.002","Listar archivos en formato largo","ls -l",0],
+["4.003","Listar archivos de /tmp","ls /tmp",0],
+["4.004","Archivos de /dev que empiecen por t","ls /dev/t*",0],
+["4.005","/dev: empiezan por tty y 5 caracteres en total","ls /dev/tty??",0],
+["4.006","/dev: terminan en 0","ls /dev/*0",0],
+["4.007","/dev: empiezan por t, terminan en 0 y 6 caracteres","ls /dev/t????0",1,"ls /dev/t???0","Cuatro ? (t + 4 + 0 = 6)."],
+["4.008","/dev: empiezan por t y terminan en 6","ls /dev/t*6",0],
+["4.009","/dev: un carácter cualquiera, luego t y termina en 6","ls /dev/?t*6",0],
+["4.010","Crear directorio Ejercicios","mkdir Ejercicios",0],
+["4.011","Cambiarte al directorio Ejercicios","cd Ejercicios",1,"cd /home/lliurex/Ejercicios","Ruta relativa."],
+["4.012","listado.txt con el listado largo del directorio de trabajo (relativa)","ls -l .. > listado.txt",0],
+["4.013","Añadir la palabra CFGS a listado.txt","echo CFGS >> listado.txt",1,"echo \"CFGS\" >> listado.txt","Sin comillas."],
+["4.014","Crear cursos/sistemas/linux","mkdir -p cursos/sistemas/linux",0],
+["4.015","Crear cursos/sistemas/windows","mkdir -p cursos/sistemas/windows",0],
+["4.016","Crear cursos/sistemas/macos","mkdir -p cursos/sistemas/macos",0],
+["4.017","Crear cursos/componentes","mkdir -p cursos/componentes",0],
+["4.018","Crear cursos/lenguajes","mkdir -p cursos/lenguajes",0],
+["4.019","Ver la estructura desde cursos (hay que instalar el comando)","tree cursos",1,"sudo apt install tree && tree cursos","Solo tree cursos."],
+["4.020","Crear directorio CFGS","mkdir CFGS",0],
+["4.021","Mover cursos (con contenido) dentro de CFGS","mv cursos CFGS",1,"mv cursos CFGS/","Sin barra final."],
+["4.022","Copiar el directorio sistemas a componentes","cp -r CFGS/cursos/sistemas CFGS/cursos/componentes",0],
+["4.023","Renombrar lenguajes a dispositivos","mv CFGS/cursos/lenguajes CFGS/cursos/dispositivos",0],
+["4.024","Borrar todo lo visible de CFGS (no CFGS)","rm -r CFGS/*",1,"rm -rf CFGS/*","Sin la f."],
+["4.025","Fichero vacío CFGS/software.txt","touch CFGS/software.txt",0],
+["4.026","Cambiarte a CFGS","cd CFGS",0],
+["4.027","Crear archivo1.txt y archivo2.txt vacíos","touch archivo1.txt archivo2.txt",0],
+["4.028","Ir al directorio padre","cd ..",0],
+["4.029","Volver a CFGS","cd CFGS",0],
+["4.030","Subir 2 directorios","cd ../..",0],
+["4.030 (bis)","Desde /home/lliurex ir a Ejercicios/CFGS","cd Ejercicios/CFGS",0],
+["4.031","Mostrar «Hola, Mundo»","echo \"Hola, Mundo\"",0],
+["4.032","prueba.txt con «Linux es genial»","echo \"Linux es genial\" > prueba.txt",0],
+["4.033","Añadir «Aprendiendo comandos» a prueba.txt","echo \"Aprendiendo comandos\" >> prueba.txt",0],
+["4.034","Mostrar prueba.txt","cat prueba.txt",0],
+["4.035","Añadir fecha y hora a archivo1.txt","date >> archivo1.txt",0],
+["4.036","Añadir el calendario a archivo2.txt","cal >> archivo2.txt",0],
+["4.037","Unir archivo1 y archivo2 en combinado.txt","cat archivo1.txt archivo2.txt > combinado.txt",0],
+["4.038","Buscar «Linux» en prueba.txt","grep \"Linux\" prueba.txt",0],
+["4.039","Líneas de combinado.txt con el número 5","grep 5 combinado.txt",1,"grep \"5\" combinado.txt","Sin comillas."],
+["4.040","Líneas de combinado.txt SIN el 5","grep -v 5 combinado.txt",0],
+["4.041","Líneas con «Pablo» en notas.txt","grep \"Pablo\" notas.txt",0],
+["4.042","Mostrar notas.txt","cat notas.txt",0],
+["4.043","Mostrar notas.txt numerando todas las líneas","cat -n notas.txt",0],
+["4.044","Últimas 5 líneas de notas.txt","tail -n 5 notas.txt",0],
+["4.045","Primeras 3 líneas de notas.txt","head -n 3 notas.txt",0],
+["4.046","notas.txt ordenado por el nombre (campo 1)","sort -k 1 notas.txt",1,"sort notas.txt","Hay que indicar -k 1."],
+["4.047","notas.txt ordenado por el primer apellido (campo 2)","sort -k 2 -t : notas.txt",1,"sort -k 2,2 notas.txt","Falta -t : (separador)."],
+["4.048","notas.txt ordenado por el segundo apellido","sort -k 3 -t : notas.txt",1,"sort -k 3,3 notas.txt"],
+["4.049","Ordenado por primer apellido, orden inverso","sort -k2 -r -t \":\" notas.txt",1,"sort -k 2,2 -r notas.txt"],
+["4.050","Número de líneas (alumnos) de notas.txt","wc -l notas.txt",0],
+["4.051","Tamaño en bytes de prueba.txt","wc -c prueba.txt",0],
+["4.052","Líneas con Daniela, campos separados por espacio en vez de :","grep Daniela notas.txt |tr \":\" \" \"",1,"grep \"Daniela\" notas.txt | tr ':' ' '","Sin comillas en grep; comillas dobles en tr."],
+["4.053","Nombre y apellido (campos 1 y 2) de notas.txt","cut -d \":\" -f 1,2 notas.txt",1,"cut -d ':' -f 1,2 notas.txt","Comillas dobles."],
+["4.054","Nombre, apellido y primera nota","cut -d \":\" -f 1,2,4 notas.txt",1,"cut -d ':' -f 1,2,3 notas.txt","La 1.ª nota es el campo 4."],
+["4.055","Nombre y apellido separados por guion","cut -f 1,2 -d\":\" notas.txt | tr \":\" \"-\"",1,"cut -d ':' -f 1,2 notas.txt | tr ':' '-'"],
+["4.056","Lo anterior, solo los llamados Pablo","cut -f 1,2 -d\":\" notas.txt | tr \":\" \"-\" |grep Pablo",1,"cut -f1,2 -d\":\" notas.txt | tr \":\" \"-\" | grep \"Pablo\"","Escribe grep Pablo sin comillas y -f 1,2 con espacio."],
+["4.057","notas2.txt = notas.txt con tabuladores en lugar de :","cat notas.txt | tr \":\" \"\\t\" > notas2.txt",1,"cat notas.txt | tr ':' '\\t' > notas2.txt"],
+["4.058","Número de palabras de notas2.txt","wc -w notas2.txt",0],
+["4.059","Nombre, 2 apellidos y 3.ª nota, con tabulador, solo Pablo, ordenados por nota","cut -f1,2,3,6 -d\":\" notas.txt | tr \":\" \"\\t\" | grep Pablo | sort -k4",1,"grep \"Pablo\" notas.txt | cut -d ':' -f 1,2,3,6 | tr ':' '\\t' | sort -k 4,4","Orden: cut → tr → grep → sort."],
+["4.060","Primer y último campo de notas.txt","cut -f 1,6 -d ':' notas.txt",1,"cut -d':' -f1,4 notas.txt","El último campo es el 6."],
+["4.061","Primer y último campo de notas2.txt","cut -f 1,6 notas2.txt",1,"cut -d':' -f1,4 notas2.txt","Tabuladores: sin -d."],
+["4.062","Buscar Daniela en todos los .txt","grep Daniela *.txt",0],
+["4.063","Mostrar /etc/passwd","cat /etc/passwd",0],
+["4.064","Buscar lliurex en /etc/passwd","grep lliurex /etc/passwd",0],
+["4.065","Usuarios (campo 1) de /etc/passwd","cut -d \":\" -f1 /etc/passwd",1,"cut -d':' -f1 /etc/passwd","Espacio tras -d y comillas dobles."],
+["4.066","Comprimir notas.txt manteniendo el original","gzip -k notas.txt",0],
+["4.067","(Verificar y) borrar el original notas.txt","rm notas.txt",1,"ls -l notas.txt notas.txt.gz","La verificación no se pone: la respuesta es el rm."],
+["4.068","Descomprimir notas.txt.gz","gzip -d notas.txt.gz",0],
+["4.069","notas.txt ordenado por apellido 1","sort -t \":\" -k2 notas.txt",1,"sort -t':' -k2,2 notas.txt"],
+["4.070","6 alumnos con la nota1 más baja de notas2.txt, de menor a mayor","sort -k4 -n notas2.txt | head -n 6",1,"sort -t':' -k3,3n notas2.txt | head -n 6","notas2.txt va por tabuladores; nota1 = campo 4."],
+["4.071","3 alumnos con la nota2 más alta, de mayor a menor","sort -k5 -n -r notas2.txt | head -n 3",1,"sort -t':' -k4,4nr notas2.txt | head -n 3","nota2 = campo 5."],
+["4.072","4 primeros caracteres de cada línea de notas.txt","cut -c1-4 notas.txt",1,"cut -c 1-4 notas.txt","Sin espacio: -c1-4."],
+["4.073","notas2.txt sin la letra a","cat notas2.txt |tr -d \"a\"",1,"cat notas2.txt | tr -d 'a'"],
+["4.074","notas2.txt sin mayúsculas","cat notas2.txt |tr -d \"A-Z\"",1,"cat notas2.txt | tr -d 'a'","Rango A-Z."],
+["4.075","notas.txt cambiando : por #","cat notas.txt | tr -s \":\" \"#\"",1,"cat notas.txt | tr ':' '#'"],
+["4.076","Nombre y 2 apellidos separados por espacio","cut -f1,2,3 -d\":\" notas.txt | tr \":\" \" \"",1,"cut -d':' -f1-3 notas.txt | tr ':' ' '"],
+["4.077","Número de inodo de notas.txt","ls -i notas.txt",0],
+["4.078","¿Cuántos enlaces tiene notas.txt?","1",1,"ls -l notas.txt","Responde el número."],
+["4.079","Enlace duro enlace_duro.txt","ln notas.txt enlace_duro.txt",0],
+["4.080","Inodos de notas.txt y enlace_duro.txt","iguales",1,"ls -i notas.txt enlace_duro.txt"],
+["4.081","¿Enlaces de notas.txt ahora?","2",1,"ls -l notas.txt"],
+["4.082","Borrar notas.txt","rm notas.txt",0],
+["4.083","ls -li: ¿enlaces de enlace_duro.txt?","1",0],
+["4.084","Contenido del enlace duro","cat enlace_duro.txt",0],
+["4.085","Recuperar notas.txt como enlace duro de enlace_duro.txt","ln enlace_duro.txt notas.txt",0],
+["4.086","Enlace simbólico simbolico.txt a notas.txt","ln -s notas.txt simbolico.txt",0],
+["4.087","ls -li: ¿enlaces de simbolico.txt?","1",0],
+["4.088","Inodos de notas.txt y simbolico.txt","Distintos",1,"ls -i notas.txt simbolico.txt"],
+["4.089","Contenido de notas.txt y simbolico.txt","iguales",1,"cat notas.txt simbolico.txt"],
+["4.090","Carácter que indica enlace simbólico en ls -l","l",0],
+["4.091","Borras notas.txt y visualizas simbolico.txt","error",1,"rm notas.txt"],
+["4.092","Recrear notas.txt como enlace duro","ln enlace_duro.txt notas.txt",0],
+["4.093","Directorio CFGS en formato largo","ls -l",1,"ls -li"],
+["4.094","Permisos actuales de notas.txt","-rw-rw-r--",1,"-rw-r--r--","Cópialo de tu ls -l."],
+["4.095","Simbólico: todos los permisos","chmod a+rwx notas.txt",1,"chmod a=rwx notas.txt"],
+["4.096","Simbólico: quitar escritura a todos","chmod a-w notas.txt",0],
+["4.097","Octal: todos los permisos","chmod 777 notas.txt",0],
+["4.098","Octal: ningún permiso","chmod 000 notas.txt",0],
+["4.099","Simbólico: todos los permisos (forma larga)","chmod u+r+w+x, g+r+w+x, o+r+w+x notas.txt",1,"chmod a=rwx notas.txt"],
+["4.100","Simbólico: quitar escritura","chmod a-w notas.txt",0],
+["4.101","Octal: quitar escritura, dejar lectura y ejecución","chmod 555 notas.txt",0],
+["4.102","Octal: lectura y escritura solo para el dueño","chmod 600 notas.txt",0],
+["4.103","Simbólico: lectura y escritura solo para el dueño","chmod u+r+w-x, g-r-w-x, o-r-w-x",1,"chmod u=rw,g=,o= notas.txt"],
+["4.104","Octal: lectura para todos, rw solo el dueño","chmod 644 notas.txt",0],
+["4.105","Simbólico: lectura para todos, rw solo el dueño","chmod u+r+w-x, g+r-w-x, o+r-w-x notas.txt",1,"chmod u=rw,go=r notas.txt"],
+["4.106","Simbólico: quitar r/w a grupo y otros, x para todos","chmod go-rw,a+x notas.txt",0],
+["4.107","Información detallada del kernel y SO","uname -a",1,"uname -a","Faltaba «$ » delante."],
+["4.108","Características de la CPU","lscpu",1,"lscpu","Faltaba «$ »."],
+["4.109","RAM y swap legible","free -h",1,"free -h","Faltaba «$ »."],
+["4.110","Uso de disco legible","df -h",1,"df -h","Faltaba «$ »."],
+["4.111","Dispositivos de bloques (discos y particiones)","lsblk",1,"lsblk","Faltaba «$ »."],
+["4.112","Dispositivos PCI","lspci",1,"lspci","Faltaba «$ »."],
+["4.113","Dispositivos USB","lsusb",1,"lsusb","Faltaba «$ »."],
+["4.114","Tiempo encendido y carga media","uptime",1,"uptime","Faltaba «$ »."],
+["4.115","Usuarios conectados","who",1,"who","Faltaba «$ »."],
+["4.116","5 primeros mensajes del kernel, legibles","dmesg -H | head -n 5",1,"dmesg -H | head -n 5","Faltaba «$ » (la solución del examen trae un typo: head-n5)."],
+["4.117","Listado largo de /usr","ls -l /usr",1,"ls -l /usr","Faltaba «$ »."],
+["4.118","Fecha y hora con formato 2025-01-08 14:35:45","date",1,"date +\"%Y-%m-%d %H:%M:%S\"","La solución guardada es solo «date»; el formato real es date +\"%Y-%m-%d %H:%M:%S\"."],
+["4.119","Calendario del mes","cal",0],
+["4.120","Calendario de 2025","cal 2025",0],
+["4.121","5 primeras líneas del log del kernel","dmesg | head -n 5",0],
+["4.122","Terminar un proceso por PID (1234)","kill 1234",0],
+["4.123","Monitor interactivo de recursos","htop",1,"htop","Faltaba «$ »."],
+["4.124","Uso de disco de los sistemas montados","df -h",0],
+["4.125","Uso de disco de /home (resumen, legible)","du -sh /home",0],
+["4.126","Uso de disco de /home para todos los ficheros","du -ah /home",0],
+["4.127","Detalles del paquete htop","apt show htop",1,"apt show htop","Faltaba «$ »."],
+["4.128","Procesos ordenados por CPU","ps aux --sort -%cpu",1,"ps aux --sort=-%cpu","Espacio, no «=»."],
+["4.129","Procesos ordenados por memoria","ps aux --sort -%mem",1,"ps aux --sort=-%mem","Espacio, no «=»."],
+["4.130","Finalizar todos los procesos «chrome»","kill chrome",1,"pkill chrome","La solución guardada es kill chrome (en la práctica: pkill chrome)."],
+["4.131","Procesos relacionados con ssh","ps aux | grep ssh",0],
+["4.132","Procesos con «mysql» en el nombre","ps aux | grep mysql",1,"$ ps aux | grep mysql","Única solución SIN «$ »."],
+["4.133","Espacio disponible en /var","df -h /var",0]
+];
+const P = [
+["ps1","Estando en C:\\ crea el directorio PS (New-Item -ItemType Directory -Name)","New-Item -ItemType Directory -Name PS",0],
+["ps2","Entra en el directorio PS (set-location -Path)","set-location -Path PS",0],
+["ps3","En C:\\PS crea la carpeta cursos con New-Item y ruta relativa","New-Item -ItemType Directory -Name cursos",0,"","Tu variante -Path .\\cursos también se dio por buena."],
+["ps4","Entra en cursos con el alias cd","cd cursos",0],
+["ps5","En C:\\PS\\cursos crea la carpeta componentes (New-Item, relativa)","New-Item -ItemType Directory -Name componentes",0,"","Tu variante -Path .\\componentes también valió."],
+["ps6","Crea la carpeta dispositivos (New-Item, relativa)","New-Item -ItemType Directory -Name dispositivos",0,"","Tu variante -Path .\\dispositivos también valió."],
+["ps7","Crea la carpeta sistemas (New-Item, relativa)","New-Item -ItemType Directory -Name sistemas",0,"","Tu variante -Path .\\sistemas también valió."],
+["ps8","Entra en sistemas con el alias cd","cd sistemas",1,"cd sistemas","Tu respuesta era idéntica a la solución y salió fallada: probable fallo de la plataforma (o un carácter invisible al pegar)."],
+["ps9","Crea las carpetas linux, macos y windows con el alias mkdir","mkdir linux, macos, windows",0],
+["ps10","Visualiza la estructura con tree desde 2 directorios atrás (relativa)","tree ..\\..",0],
+["ps21","Estando en C:\\PS crea 2 archivos vacíos aviso1.txt y aviso2.txt (New-Item)","New-Item -ItemType File -Path aviso1.txt, aviso2.txt",2,"","Con -Name y dos nombres da error; con -Path funciona. También valdría repetir el comando: New-Item -ItemType File -Name aviso1.txt ; New-Item -ItemType File -Name aviso2.txt"],
+["ps22","Lista solo los archivos dentro del directorio actual","Get-ChildItem -File",2],
+["ps23","Crea 2 archivos vacíos registro1.log y registro2.log","New-Item -ItemType File -Path registro1.log, registro2.log",2],
+["ps24","Estando en C:\\PS copia todos los archivos .log al directorio windows (ruta relativa)","Copy-Item -Path *.log -Destination cursos\\sistemas\\windows",2,"","«windows» está en C:\\PS\\cursos\\sistemas\\windows, así que desde C:\\PS la ruta relativa es cursos\\sistemas\\windows (con .\\ delante también vale)."],
+["ps25","Elimina todos los archivos .log del directorio actual","Remove-Item -Path *.log",2],
+["ps26","Crea tres directorios: Dir1, Dir2, Dir3","mkdir Dir1, Dir2, Dir3",2,"","Como en ps9. Alternativa: New-Item -ItemType Directory -Path Dir1, Dir2, Dir3"],
+["ps27","Cambia al directorio cursos (ruta absoluta)","Set-Location -Path C:\\PS\\cursos",2,"","Con el alias: cd C:\\PS\\cursos"],
+["ps28","Crea un archivo vacío datos.csv","New-Item -ItemType File -Name datos.csv",2],
+["ps29","Lista los elementos del directorio windows (ruta relativa)","Get-ChildItem -Path sistemas\\windows",2,"","Pensado desde C:\\PS\\cursos (donde estás tras ps27). Si estuvieras en C:\\PS sería cursos\\sistemas\\windows."],
+["ps30","Elimina el archivo datos.csv","Remove-Item datos.csv",2],
+["ps31","Muestra «¡Hola, mundo!» en la consola","Write-Output \"¡Hola, mundo!\"",1,"Write-Host \"¡Hola, mundo!\"","Para mostrar texto el profe quiere Write-Output."],
+["ps32","Guarda en sintaxis.txt la ayuda de tree (tree /?)","tree /? | Out-File sintaxis.txt",0,"","Tu variante tree /? > sintaxis.txt también valió (> es Out-File)."],
+["ps33","Muestra el contenido de sintaxis.txt","Get-Content sintaxis.txt",0,"","La solución guardada decía datos.txt (errata)."],
+["ps34","Busca «carpeta» en sintaxis.txt (Select-String)","Select-String -Path sintaxis.txt -Pattern carpeta",0,"","Tu orden -Pattern … -Path … también valió."],
+["ps35","Crea prueba.txt con «Primera línea»","Write-Output \"Primera línea\" | Out-File prueba.txt",0,"","La solución guardada tenía un > de más. Tu Set-Content también valió."],
+["ps36 (agregar)","Agrega «Segunda línea» a prueba.txt","Write-Output \"Segunda línea\" | Out-File prueba.txt -Append",0,"","La solución guardada tenía una errata (-File Path). Tu Add-Content también valió."],
+["ps36 (tail)","Últimas 3 líneas de sintaxis.txt","Get-Content sintaxis.txt -Tail 3",0],
+["ps37","Primeras 5 líneas de sintaxis.txt","Get-Content sintaxis.txt -TotalCount 5",0,"","Tu -Head 5 también valió (es otro nombre del mismo parámetro)."],
+["ps38","Ordena alfabéticamente sintaxis.txt","Get-Content sintaxis.txt | Sort-Object",0],
+["ps39","Solo los nombres de archivos y directorios del directorio actual","Get-ChildItem -Name",0],
+["ps40","Muestra sintaxis.txt y después «COMANDO COMPLETADO» (con ;)","Get-Content sintaxis.txt ; Write-Output \"COMANDO COMPLETADO\"",0,"","Tu Write-Host valió aquí, pero en ps31 no: usa Write-Output."],
+["ps41","lista.txt con solo los nombres del directorio actual","Get-ChildItem -Name > lista.txt",0],
+["ps42","Redirige «Proceso completado» a output.log","Write-Output \"Proceso completado\" | Out-File -Append output.log",0,"","La solución guardada tenía erratas («proceo»). Tu variante con > valió."],
+["ps43","Vacía output.log (sin borrarlo)","Clear-Content -Path output.log",0,"","Tu Clear-Content output.log valió."],
+["ps44","Cuenta las líneas de notas.txt con .Count","(Get-Content notas.txt).Count",0],
+["ps45","Cuenta las líneas con Measure-Object","Get-Content notas.txt | Measure-Object -Line",0],
+["ps46","Ordena los archivos por tamaño","Get-ChildItem -File | Sort-Object -Property Length",0],
+["ps47","Filtra los archivos .txt (-Filter)","Get-ChildItem -File -Filter *.txt",0,"","La solución guardada escribía -Filter .txt, sin el *."],
+["ps48","Líneas con Pablo en notas.txt","Select-String -Path notas.txt -Pattern \"Pablo\"",0],
+["ps49","Guarda las 10 primeras líneas de notas.txt en notas_10.txt","Get-Content notas.txt -TotalCount 10 | Out-File notas_10.txt",0,"","Tu variante con > valió."],
+["ps50","Muestra notas.txt y notas_10.txt (separados por línea en blanco, con ;)","Get-Content notas.txt; Get-Content notas_10.txt",0,"","La solución guardada no lleva la línea en blanco; tu Write-Host \"\" también valió."],
+["ps51","Combina notas.txt y notas_10.txt en notas_combinado.txt","Get-Content notas.txt, notas_10.txt | Out-File notas_combinado.txt",0,"","Tu variante con > valió."],
+["ps52","Ordena alfabéticamente notas.txt","Get-Content notas.txt | Sort-Object",0],
+["ps53","Archivos del directorio por tamaño","Get-ChildItem | Sort-Object -Property Length",0,"","Tu -File extra valió."],
+["ps54","Archivos por tamaño, de mayor a menor","Get-ChildItem | Sort-Object -Property Length -Descending",0],
+["ps55","Los 3 archivos más grandes","Get-ChildItem | Sort-Object -Property Length -Descending | Select-Object -First 3",0],
+["ps56","Solo las carpetas del directorio actual","Get-ChildItem -Directory",0],
+["ps57","Solo los nombres de los archivos que empiecen por «notas»","Get-ChildItem -Name -Filter notas*",0,"","La solución guardada (-filter Notas) no lleva *. Tu -File -Filter \"notas*\" -Name valió."],
+["ps58","Líneas con un 10 en notas.txt","Select-String -Path notas.txt -Pattern \"10\"",0],
+["ps59","Últimas 5 líneas de notas.txt en notas_5.txt","Get-Content -Path notas.txt -Tail 5 | Out-File notas_5.txt",0,"","Tu variante con > valió."],
+["ps60","notas.txt ordenado alfabéticamente al revés","Get-Content notas.txt | Sort-Object -Descending",0],
+["ps61","Información básica del sistema","Get-ComputerInfo",0],
+["ps62","Solo el nombre del equipo","Get-ComputerInfo -Property csname",0,"","Tu Select-Object CsName valió."],
+["ps63","Nombre del producto del sistema operativo","Get-ComputerInfo -Property WindowsProductName",0,"","Tu Select-Object valió."],
+["ps64","Procesador y versión de Windows (CsProcessors, WindowsVersion)","Get-ComputerInfo -Property CsProcessors, windowsVersion",0,"","Tu Select-Object valió."],
+["ps65","Arquitectura y distribución del teclado","Get-ComputerInfo -Property OsArchitecture,KeyboardLayout",0,"","Tu Select-Object valió."],
+["ps66","Última vez que se encendió el sistema","Get-ComputerInfo -Property OsLastBootUpTime",0,"","La solución guardada decía LastBootUpTime; el nombre real de la propiedad es OsLastBootUpTime."],
+["ps67","Memoria instalada (osTotalVisibleMemorySize)","Get-ComputerInfo -Property osTotalVisibleMemorySize",1,"Get-ComputerInfo | Select-Object OsTotalVisibleMemorySize","Aquí no se aceptó el Select-Object: usa -Property."],
+["ps68","Muestra todos los servicios en ejecución","Get-Service",1,"Get-Service | Where-Object {$_.Status -eq \"Running\"}","La solución guardada es solo Get-Service. El filtro Running es la ps69."],
+["ps69","Solo los servicios en estado Running","Get-Service | Where-Object Status -eq \"Running\"",0],
+["ps70","Servicios que contienen «Network»","Get-Service | Where-Object Name -like \"*Network*\"",0,"","La solución guardada traía espacios en vez de *."],
+["ps71","Ordena los servicios por su nombre","Get-Service | Sort-Object Name",1,"Get-Service | Sort-Object Name","La solución guardada (Get-Process -Name \"notepad\") parece de otra pregunta: tu respuesta es la lógica. Si vuelve a salir, es fallo de la plataforma."],
+["ps72","Solo el servicio «Windows Update»","Get-Service -Name \"wuauserv\"",0,"","wuauserv = nombre interno de Windows Update. Tu DisplayName valió."],
+["ps73","Nombre y estado de todos los servicios","Get-Service | Select-Object Name, Status",0],
+["ps74","Detén el servicio Cola de impresión (Spooler)","Stop-Service -Name \"Spooler\"",1,"Get-Service | Where-Object Name -eq \"Spooler\" | Stop-Service","Directo: Stop-Service -Name."],
+["ps75","Muestra solo el servicio Spooler","Get-Service -Name \"Spooler\"",0,"","Tu Where-Object valió."],
+["ps76","Inicia el servicio Spooler","Start-Service -Name \"Spooler\"",1,"Get-Service | Where-Object Name -eq \"Spooler\" | Start-Service","Directo: Start-Service -Name."],
+["ps77","Todos los procesos en ejecución","Get-Process",0],
+["ps78","Procesos con «Microsoft» en el nombre","Get-Process | Where-Object Name -like \"*Microsoft*\"",0],
+["ps79","Procesos por uso de CPU, de más a menos","Get-Process | Sort-Object CPU -Descending",0],
+["ps80","Los 5 procesos que más CPU usan","Get-Process | Sort-Object CPU -Descending | Select-Object -First 5",0],
+["ps81","Abre notepad","start notepad",0],
+["ps82","Verifica que existe un proceso «notepad»","Get-Process -Name \"notepad\"",0],
+["ps83","Para el proceso notepad","Stop-Process -Name \"notepad\"",1],
+["ps84","Información detallada del sistema","systeminfo",0],
+["ps85","Solo el nombre del sistema operativo (de systeminfo)","systeminfo | Select-String \"Nombre del sistema operativo\"",0],
+["ps86","Solo el tiempo de arranque del sistema","systeminfo | Select-String \"Tiempo de arranque del sistema\"",0],
+["ps87","Discos montados en el sistema","Get-PSDrive",0],
+["ps88","Actualizaciones instaladas","Get-HotFix",0],
+["ps89","Información del sistema operativo con Get-WmiObject","Get-WmiObject -Class Win32_OperatingSystem",0],
+["ps90","Detalles de la CPU con Get-WmiObject","Get-WmiObject Win32_Processor",0]
+];
+
+// ---------- bancos de ejercicios (Linux y PowerShell) ----------
+function setupBank(key, data, sigil, isCmd, noDollar){
+  const bank = document.getElementById("bank-"+key);
+  data.forEach(function(e){
+    const row = document.createElement("div");
+    row.className = "row " + (e[3] === 2 ? "pend" : e[3] ? "bad" : "ok");
+    row.dataset.bad = e[3] === 1 ? "1" : "0";
+    const id = document.createElement("div"); id.className="id"; id.textContent=e[0];
+    const q = document.createElement("div"); q.className="q"; q.textContent=e[1];
+    const a = document.createElement("code"); a.className="a";
+    a.textContent = (isCmd(e[2]) && !noDollar.has(e[0]) ? sigil : "") + e[2];
+    a.title = "Clic para copiar";
+    row.append(id,q,a);
+    if(e[3] === 1 && e[4]){ const m=document.createElement("div"); m.className="mine"; m.textContent="Tu respuesta: "+e[4]; row.append(m); }
+    if(e[3] === 2){ const p=document.createElement("div"); p.className="pendnote"; p.textContent="Sin solución oficial: respuesta propuesta, probada en PowerShell 5.1."; row.append(p); }
+    if(e[5]){ const n=document.createElement("div"); n.className="n"; n.textContent="→ "+e[5]; row.append(n); }
+    row.dataset.text = (e[0]+" "+e[1]+" "+e[2]+" "+(e[4]||"")+" "+(e[5]||"")).toLowerCase();
+    bank.appendChild(row);
+  });
+  const total = data.length, bad = data.filter(function(e){return e[3] === 1}).length, pend = data.filter(function(e){return e[3] === 2}).length;
+  document.getElementById("stat-"+key).textContent = total+" ejercicios · "+bad+" falladas · "+(total-bad-pend)+" correctas" + (pend ? " · "+pend+" sin solución oficial" : "");
+  const quiz = document.getElementById("quiz-"+key);
+  quiz.addEventListener("change", function(){
+    bank.classList.toggle("quiz", quiz.checked);
+    bank.querySelectorAll(".a.show").forEach(function(x){ x.classList.remove("show"); });
+  });
+}
+setupBank("linux", E, "$ ", function(s){ return !/^(\d+|iguales|Distintos|error|l|-[-rwx]{9})$/.test(s); }, new Set(["4.132"]));
+setupBank("ps", P, "> ", function(){ return true; }, new Set());
+
+// ---------- copiar con clic ----------
+document.addEventListener("click", function(ev){
+  const el = ev.target.closest(".ex,.syntax,.row .a");
+  if(!el) return;
+  const bank = el.closest(".bank");
+  if(el.classList.contains("a") && bank && bank.classList.contains("quiz") && !el.classList.contains("show")){
+    el.classList.add("show"); return;
+  }
+  let text = el.classList.contains("a") ? el.textContent : el.innerText.replace(/\s*#.*$/gm,"").trim();
+  try{ navigator.clipboard.writeText(text); }catch(e){}
+  el.classList.add("copied"); setTimeout(function(){ el.classList.remove("copied"); },900);
+});
+
+// ---------- buscador + filtros ----------
+const q = document.getElementById("q");
+function apply(){
+  const t = q.value.trim().toLowerCase();
+  document.querySelectorAll(".cmd").forEach(function(c){
+    const hay = (c.dataset.search||"")+" "+c.textContent.toLowerCase();
+    c.classList.toggle("hidden", !!t && hay.indexOf(t) === -1);
+  });
+  document.querySelectorAll(".bank .row").forEach(function(r){
+    const only = document.getElementById("only-"+r.parentElement.dataset.key);
+    const okText = !t || r.dataset.text.indexOf(t) !== -1;
+    const okBad = !only.checked || r.dataset.bad === "1";
+    r.classList.toggle("hidden", !(okText && okBad));
+  });
+  document.querySelectorAll("section[data-section]").forEach(function(s){
+    const onlyOn = s.querySelector('input[id^="only-"]');
+    if(!t && !(onlyOn && onlyOn.checked)) { s.classList.remove("hidden"); return; }
+    const any = s.querySelector(".cmd:not(.hidden), .row:not(.hidden)");
+    s.classList.toggle("hidden", !any);
+  });
+}
+q.addEventListener("input", apply);
+document.querySelectorAll('input[id^="only-"]').forEach(function(x){ x.addEventListener("change", apply); });
+
+// ---------- pestañas Linux / PowerShell ----------
+function showPane(name){
+  ["linux","ps"].forEach(function(k){
+    document.getElementById("pane-"+k).classList.toggle("off", k!==name);
+    document.getElementById("nav-"+k).classList.toggle("off", k!==name);
+    document.getElementById("tab-"+k).setAttribute("aria-selected", k===name ? "true" : "false");
+  });
+  try{ localStorage.setItem("pane", name); }catch(e){}
+}
+document.querySelectorAll(".tab").forEach(function(b){
+  b.addEventListener("click", function(){ showPane(b.dataset.pane); window.scrollTo(0,0); });
+});
+(function(){
+  let p = null;
+  try{ p = localStorage.getItem("pane"); }catch(e){}
+  if(/^#(ps-|p-)/.test(location.hash)) p = "ps";
+  if(p === "ps" || p === "linux") showPane(p);
+})();
+
+// calculadora de permisos
+const who = ["u","g","o"], perm = ["r","w","x"], val = [4,2,1];
+const numIn = document.getElementById("c-num");
+function boxes(w,p){ return document.getElementById("c-"+w+p); }
+function fromBoxes(){
+  let n="", s="-";
+  who.forEach(function(w){
+    let d=0;
+    perm.forEach(function(p,i){ if(boxes(w,p).checked){ d+=val[i]; s+=p; } else { s+="-"; } });
+    n+=d;
+  });
+  numIn.value = n;
+  document.getElementById("c-sym").textContent = s;
+  document.getElementById("c-cmd").textContent = "chmod "+n+" fichero";
+}
+function fromNumber(){
+  const v = numIn.value;
+  if(!/^[0-7]{3}$/.test(v)) return;
+  who.forEach(function(w,wi){
+    const d = parseInt(v[wi],10);
+    perm.forEach(function(p,i){ boxes(w,p).checked = (d & val[i]) !== 0; });
+  });
+  fromBoxes();
+}
+who.forEach(function(w){ perm.forEach(function(p){ boxes(w,p).addEventListener("change", fromBoxes); }); });
+numIn.addEventListener("input", fromNumber);
+fromBoxes();
+
+// tema
+const root = document.documentElement;
+try{ const s = localStorage.getItem("tema"); if(s) root.dataset.theme = s; }catch(e){}
+document.getElementById("theme").addEventListener("click", function(){
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try{ localStorage.setItem("tema", root.dataset.theme); }catch(e){}
+});
+</script>
+</body>
+</html>
